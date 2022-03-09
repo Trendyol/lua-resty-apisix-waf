@@ -2,6 +2,7 @@ OPENRESTY_PREFIX ?= /usr/local/openresty
 LUA_LIB_DIR      ?= $(OPENRESTY_PREFIX)/site/lualib
 INSTALL_SOFT     ?= ln -s
 INSTALL          ?= install
+CURL             ?= curl
 RESTY_BINDIR      = $(OPENRESTY_PREFIX)/bin
 OPM               = $(RESTY_BINDIR)/opm
 OPM_LIB_DIR      ?= $(OPENRESTY_PREFIX)/site
@@ -16,6 +17,8 @@ MAKE_LIBS  = $(C_LIBS) decode
 SO_LIBS    = libac.so libinjection.so libhtmlentities.so libdecode.so
 RULES      = rules
 ROCK_DEPS  = "lrexlib-pcre 2.7.2-1" busted luafilesystem
+
+SBOX_UTIL_LINK = https://raw.githubusercontent.com/mozilla-services/lua_sandbox_extensions/main/heka/modules/heka/util.lua
 
 LOCAL_LIB_DIR = lib/resty
 
@@ -38,7 +41,7 @@ clean-install: clean-deps
 clean-decode:
 	cd src && make clean
 
-clean-deps: clean-opm-libs clean-rocks
+clean-deps: clean-opm-libs clean-rocks clean-ext-deps
 
 clean-lua-aho-corasick:
 	cd lua-aho-corasick && make clean
@@ -60,6 +63,9 @@ clean-rocks:
 	for ROCK in $(ROCK_DEPS); do \
 		$(LUAROCKS) remove --tree=$(OPENRESTY_PREFIX) $$ROCK; \
 	done
+
+clean-ext-deps:
+	rm -f /tmp/sboxutil_temp.lua
 
 clean-test:
 	rm -rf t/servroot*
@@ -127,7 +133,7 @@ test-fast: all
 install-check:
 	stat lib/*.so > /dev/null
 
-install-deps: install-opm-libs install-rocks
+install-deps: install-opm-libs install-rocks install-ext-deps
 
 install-opm-libs:
 	$(OPM) --install-dir=$(OPM_LIB_DIR) get $(OPM_LIBS)
@@ -136,6 +142,10 @@ install-rocks:
 	for ROCK in $(ROCK_DEPS); do \
 		$(LUAROCKS) install --tree=$(OPENRESTY_PREFIX) $$ROCK; \
 	done
+
+install-ext-deps: clean-ext-deps
+	$(CURL) -SL -o /tmp/sboxutil_temp.lua $(SBOX_UTIL_LINK)
+	$(INSTALL) -m 644 /tmp/sboxutil_temp.lua $(LUA_LIB_DIR)/util.lua
 
 install-link: install-check
 	$(INSTALL_SOFT) $(PWD)/lib/resty/* $(LUA_LIB_DIR)/resty/

@@ -184,8 +184,10 @@ end
 
 -- use the lookup table to figure out what to do
 local function _rule_action(self, action, ctx, collections)
+	local stat, ob = nil, nil
+
 	if not action then
-		return
+		return stat, ob
 	end
 
 	if util.table_has_key(action, actions.alter_actions) then
@@ -194,10 +196,12 @@ local function _rule_action(self, action, ctx, collections)
 	end
 
 	if self._hook_actions[action] then
-		self._hook_actions[action](self, ctx)
+		stat, ob = self._hook_actions[action](self, ctx)
 	else
-		actions.disruptive_lookup[action](self, ctx)
+		stat, ob = actions.disruptive_lookup[action](self, ctx)
 	end
+
+	return stat, ob
 end
 
 -- transform collection values based on rule opts
@@ -276,6 +280,8 @@ local function _process_rule(self, rule, collections, ctx)
 	local opts    = rule.opts or {}
 	local pattern = rule.pattern
 	local offset  = rule.offset_nomatch
+	local stat    = nil
+	local ob      = nil
 
 	ctx.id = rule.id
 
@@ -353,7 +359,7 @@ local function _process_rule(self, rule, collections, ctx)
 				end
 
 				-- wrapper for the rules action
-				_rule_action(self, rule.actions.disrupt, ctx, collections)
+				stat, ob = _rule_action(self, rule.actions.disrupt, ctx, collections)
 
 				offset = rule.offset_match
 
@@ -364,8 +370,8 @@ local function _process_rule(self, rule, collections, ctx)
 		end
 	end
 
-	--_LOG_"Returning offset " .. tostring(offset)
-	return offset
+	--_LOG_"Returning offset " .. tostring(offset) .. " with stat " .. tostring(stat)
+	return offset, stat, ob
 end
 
 -- calculate rule jump offsets
@@ -444,6 +450,9 @@ function _M.exec(self, opts)
 		--_LOG_"Operational mode is INACTIVE, not running"
 		return
 	end
+
+	local stat = nil
+	local ob = nil
 
 	opts = opts or {}
 
@@ -553,7 +562,8 @@ function _M.exec(self, opts)
 			if not util.table_has_key(rule.id, self._ignore_rule) then
 				--_LOG_"Processing rule " .. rule.id
 
-				local returned_offset = _process_rule(self, rule, collections, ctx)
+				local returned_offset
+				returned_offset, stat, ob = _process_rule(self, rule, collections, ctx)
 				if returned_offset then
 					offset = offset + returned_offset
 				else
@@ -578,6 +588,7 @@ function _M.exec(self, opts)
 	end
 
 	_finalize(self, ctx)
+	return stat, ob
 end
 
 -- instantiate a new instance of the module

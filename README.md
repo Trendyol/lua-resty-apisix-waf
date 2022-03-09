@@ -119,12 +119,6 @@ A simple Makefile is provided:
 # make && sudo make install
 ```
 
-Alternatively, install via Luarocks:
-
-```
-# luarocks install lua-resty-waf
-```
-
 lua-resty-waf makes use of the [OPM](https://github.com/openresty/opm) package manager, available in modern OpenResty distributions. The client OPM tools requires that the `resty` command line tool is available in your system's `PATH` environmental variable.
 
 Note that by default lua-resty-waf runs in SIMULATE mode, to prevent immediately affecting an application; users who wish to enable rule actions must explicitly set the operational mode to ACTIVE.

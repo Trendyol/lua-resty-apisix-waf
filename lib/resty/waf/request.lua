@@ -15,7 +15,7 @@ local table_insert = table.insert
 
 _M.version = base.version
 
-function _M.parse_request_body(waf, request_headers, collections)
+function _M.parse_request_body(waf, request_headers, collections, phase)
 	local content_type_header = request_headers["content-type"]
 
 	-- multiple content-type headers are likely an evasion tactic
@@ -23,6 +23,9 @@ function _M.parse_request_body(waf, request_headers, collections)
 	-- this or adding an option to disable this checking in the future
 	if type(content_type_header) == "table" then
 		--_LOG_"Request contained multiple content-type headers, bailing!"
+		if phase == "access" then
+			return nil, 400, { message = "Bad Request" }
+		end
 		ngx.exit(400)
 	end
 
@@ -32,7 +35,7 @@ function _M.parse_request_body(waf, request_headers, collections)
 	-- and its likely a sign of nogoodnickery anyway
 	if not content_type_header then
 		--_LOG_"Request has no content type, ignoring the body"
-		return nil
+		return nil, nil, nil
 	end
 
 	--_LOG_"Examining content type " .. content_type_header
@@ -42,12 +45,15 @@ function _M.parse_request_body(waf, request_headers, collections)
 	-- (but its much less strict that ModSecurity's strict checking)
 	if ngx.re.find(content_type_header, [=[^multipart/form-data; boundary=]=], waf._pcre_flags) then
 		if not waf._process_multipart_body then
-			return
+			return nil, nil, nil
 		end
 
 		local form, err = upload:new()
 		if not form then
 			logger.warn(waf, "failed to parse multipart request: ", err)
+			if phase == "access" then
+				return nil, 400, { message = "Bad Request" }
+			end
 			ngx.exit(400) -- may move this into a ruleset along with other strict checking
 		end
 
@@ -128,7 +134,7 @@ function _M.parse_request_body(waf, request_headers, collections)
 		collections.FILES_TMP_CONTENT = FILES_TMP_CONTENT
 		collections.FILES_COMBINED_SIZE = files_size
 
-		return nil
+		return nil, nil, nil
 	else
 		-- remove charset from the content-type (e.g. application/json;charset=utf-8 -> application/json)
 		content_type_header = string.match(content_type_header, "[^;]+")
@@ -140,14 +146,14 @@ function _M.parse_request_body(waf, request_headers, collections)
 			if ngx.req.get_body_file() == nil then
 				local body_data = decode(ngx.req.get_body_data())
 					if type(body_data) == "table" then
-						return util.unpack_json(waf, decode(ngx.req.get_body_data()),'')
+						return util.unpack_json(waf, decode(ngx.req.get_body_data()),''), nil, nil
 					else
 						-- consider the body data as a string that is inserted into a table if it's not a well-formated JSON string
-						return { body_data }
+						return { body_data }, nil, nil
 					end
 			else
 				--_LOG_"Request body size larger than client_body_buffer_size, ignoring request body"
-				return nil
+				return nil, nil, nil
 			end
 		elseif ngx.re.find(content_type_header, [=[^application/x-www-form-urlencoded]=], waf._pcre_flags) then
 			-- use the underlying ngx API to read the request body
@@ -156,29 +162,32 @@ function _M.parse_request_body(waf, request_headers, collections)
 			ngx.req.read_body()
 	
 			if ngx.req.get_body_file() == nil then
-				return ngx.req.get_post_args()
+				return ngx.req.get_post_args(), nil, nil
 			else
 				--_LOG_"Request body size larger than client_body_buffer_size, ignoring request body"
-				return nil
+				return nil, nil, nil
 			end
 		elseif util.table_has_key(content_type_header, waf._allowed_content_types) then
 			-- if the content type has been whitelisted by the user, set REQUEST_BODY as a string
 			ngx.req.read_body()
 	
 			if ngx.req.get_body_file() == nil then
-				return ngx.req.get_body_data()
+				return ngx.req.get_body_data(), nil, nil
 			else
 				--_LOG_"Request body size larger than client_body_buffer_size, ignoring request body"
-				return nil
+				return nil, nil, nil
 			end
 		else
 			if waf._allow_unknown_content_types then
 				--_LOG_"Allowing request with content type " .. tostring(content_type_header)
-				return nil
+				return nil, nil, nil
 			else
 				--_LOG_tostring(content_type_header) .. " not a valid content type!"
 				logger.warn(waf, tostring(content_type_header) .. " not a valid content type!")
 				if waf._mode == "ACTIVE" then
+					if phase == "access" then
+						return nil, 403, { message = "Access Denied" }
+					end
 					ngx.exit(ngx.HTTP_FORBIDDEN)
 				end
 			end
