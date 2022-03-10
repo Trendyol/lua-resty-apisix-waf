@@ -116,7 +116,10 @@ lua-resty-waf workload is almost exclusively CPU bound. Memory footprint in the 
 A simple Makefile is provided:
 
 ```
-# make && sudo make install
+$ git clone https://github.com/ilteriseroglu-ty/lua-resty-waf.git
+$ cd lua-resty-waf
+$ git submodule init && git submodule update --recursive
+$ make && sudo make install
 ```
 
 lua-resty-waf makes use of the [OPM](https://github.com/openresty/opm) package manager, available in modern OpenResty distributions. The client OPM tools requires that the `resty` command line tool is available in your system's `PATH` environmental variable.
