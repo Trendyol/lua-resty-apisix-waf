@@ -12,6 +12,9 @@ local table_concat  = table.concat
 _M.version = base.version
 
 _M.lookup = {
+	---@param waf WAF
+	---@param collections WAF.Collections
+	---@param ctx WAF.Ctx
 	access = function(waf, collections, ctx)
 		local request_headers        = ngx.req.get_headers()
 		local request_var            = ngx.var.request
@@ -22,7 +25,7 @@ _M.lookup = {
 		local request_basename       = request.basename(waf, ngx.var.uri)
 		local request_body, stat, ob = request.parse_request_body(waf, request_headers, collections, ctx.phase)
 		local request_cookies        = request.cookies() or {}
-		local request_common_args    = request.common_args({ request_uri_args, request_body })
+		local request_common_args    = request.common_args({ request_uri_args, request_body, request_cookies })
 		local query_string           = ngx.var.query_string
 
 		local query_str_size = query_string and #query_string or 0
@@ -51,6 +54,7 @@ _M.lookup = {
 
 		collections.ARGS_COMBINED_SIZE = query_str_size + body_size
 
+		---@type integer
 		local year, month, day, hour, minute, second = string_match(ngx.localtime(),
 			"(%d%d%d%d)-(%d%d)-(%d%d) (%d%d):(%d%d):(%d%d)")
 
@@ -62,6 +66,7 @@ _M.lookup = {
 		collections.TIME_MON          = month
 		collections.TIME_SEC          = second
 		collections.TIME_YEAR         = year
+		collections.UNIQUE_ID  = waf.transaction_id
 	end,
 	header_filter = function(waf, collections)
 		local response_headers = ngx.resp.get_headers()

@@ -1,0 +1,1570 @@
+{
+   "access" : [
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "944011",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "944012",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944100",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Remote Command Execution: Suspicious Java class detected",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "java\\.lang\\.(?:runtime|processbuilder)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/137/6",
+            "PCI/6.5.2",
+            "paranoia-level/1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "944110",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "(?:runtime|processbuilder)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944110",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Remote Command Execution: Java process spawn (CVE-2017-9805)",
+         "operator" : "REFIND",
+         "pattern" : "(?:unmarshaller|base64data|java\\.)",
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "944120",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "(?:clonetransformer|forclosure|instantiatefactory|instantiatetransformer|invokertransformer|prototypeclonefactory|prototypeserializationfactory|whileclosure|getproperty|filewriter|xmldecoder)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944120",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Remote Command Execution: Java serialization (CVE-2015-4852)",
+         "operator" : "REFIND",
+         "pattern" : "(?:runtime|processbuilder)",
+         "vars" : [
+            {
+               "type" : "MATCHED_VARS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944130",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Suspicious Java class detected",
+         "operator" : "PM",
+         "pattern" : [
+            "com.opensymphony.xwork2",
+            "com.sun.org.apache",
+            "java.io.BufferedInputStream",
+            "java.io.BufferedReader",
+            "java.io.ByteArrayInputStream",
+            "java.io.ByteArrayOutputStream",
+            "java.io.CharArrayReader",
+            "java.io.DataInputStream",
+            "java.io.File",
+            "java.io.FileOutputStream",
+            "java.io.FilePermission",
+            "java.io.FileWriter",
+            "java.io.FilterInputStream",
+            "java.io.FilterOutputStream",
+            "java.io.FilterReader",
+            "java.io.InputStream",
+            "java.io.InputStreamReader",
+            "java.io.LineNumberReader",
+            "java.io.ObjectOutputStream",
+            "java.io.OutputStream",
+            "java.io.PipedOutputStream",
+            "java.io.PipedReader",
+            "java.io.PrintStream",
+            "java.io.PushbackInputStream",
+            "java.io.Reader",
+            "java.io.StringReader",
+            "java.lang.Class",
+            "java.lang.Integer",
+            "java.lang.Number",
+            "java.lang.Object",
+            "java.lang.Process",
+            "java.lang.ProcessBuilder",
+            "java.lang.reflect",
+            "java.lang.Runtime",
+            "java.lang.String",
+            "java.lang.StringBuilder",
+            "java.lang.System",
+            "javax.script.ScriptEngineManager",
+            "org.apache.commons",
+            "org.apache.struts",
+            "org.apache.struts2",
+            "org.omg.CORBA",
+            "java.beans.XMLDecode"
+         ],
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "type" : "URI"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944140",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Java Injection Attack: Java Script File Upload Found",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : ".*\\.(?:jsp|jspx)\\.*$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-injection-java",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/152/242"
+         ],
+         "vars" : [
+            {
+               "type" : "FILES"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "X-Filename"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "X_Filename"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "X.Filename"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "X-File-Name"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944150",
+         "msg" : "Potential Remote Command Execution: Log4j / Log4shell",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni",
+               "js_decode",
+               "html_decode"
+            ]
+         },
+         "pattern" : "(?i)(?:\\$|&dollar;?)(?:\\{|&(?:lbrace|lcub);?)(?:[^}]{0,15}(?:\\$|&dollar;?)(?:\\{|&(?:lbrace|lcub);?)|(?:jndi|ctx))",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/137/6",
+            "PCI/6.5.2",
+            "paranoia-level/1"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_LINE"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "944013",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "944014",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944151",
+         "msg" : "Potential Remote Command Execution: Log4j / Log4shell",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni",
+               "js_decode",
+               "html_decode"
+            ]
+         },
+         "pattern" : "(?i)(?:\\$|&dollar;?)(?:\\{|&(?:lbrace|lcub);?)(?:[^}]*(?:\\$|&dollar;?)(?:\\{|&(?:lbrace|lcub);?)|(?:jndi|ctx))",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/137/6",
+            "PCI/6.5.2",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_LINE"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944200",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Magic bytes Detected, probable java serialization in use",
+         "operator" : "REFIND",
+         "pattern" : "\\xac\\xed\\x00\\x05",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944210",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Magic bytes Detected Base64 Encoded, probable java serialization in use",
+         "operator" : "REFIND",
+         "pattern" : "(?:rO0ABQ|KztAAU|Cs7QAF)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944240",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Remote Command Execution: Java serialization (CVE-2015-4852)",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "(?:clonetransformer|forclosure|instantiatefactory|instantiatetransformer|invokertransformer|prototypeclonefactory|prototypeserializationfactory|whileclosure|getproperty|filewriter|xmldecoder)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944250",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Remote Command Execution: Suspicious Java method detected",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "java\\b.+(?:runtime|processbuilder)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944260",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Remote Command Execution: Malicious class-loading payload",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "(?:class\\.module\\.classLoader\\.resources\\.context\\.parent\\.pipeline|springframework\\.context\\.support\\.FileSystemXmlApplicationContext)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "944015",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "944016",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL3",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944300",
+         "logdata" : "Matched Data: %{MATCHED_VAR} found within %{MATCHED_VAR_NAME}",
+         "msg" : "Base64 encoded string matched suspicious keyword",
+         "operator" : "REFIND",
+         "pattern" : "(?:cnVudGltZQ|HJ1bnRpbWU|BydW50aW1l|cHJvY2Vzc2J1aWxkZXI|HByb2Nlc3NidWlsZGVy|Bwcm9jZXNzYnVpbGRlcg|Y2xvbmV0cmFuc2Zvcm1lcg|GNsb25ldHJhbnNmb3JtZXI|BjbG9uZXRyYW5zZm9ybWVy|Zm9yY2xvc3VyZQ|GZvcmNsb3N1cmU|Bmb3JjbG9zdXJl|aW5zdGFudGlhdGVmYWN0b3J5|Gluc3RhbnRpYXRlZmFjdG9yeQ|BpbnN0YW50aWF0ZWZhY3Rvcnk|aW5zdGFudGlhdGV0cmFuc2Zvcm1lcg|Gluc3RhbnRpYXRldHJhbnNmb3JtZXI|BpbnN0YW50aWF0ZXRyYW5zZm9ybWVy|aW52b2tlcnRyYW5zZm9ybWVy|Gludm9rZXJ0cmFuc2Zvcm1lcg|BpbnZva2VydHJhbnNmb3JtZXI|cHJvdG90eXBlY2xvbmVmYWN0b3J5|HByb3RvdHlwZWNsb25lZmFjdG9yeQ|Bwcm90b3R5cGVjbG9uZWZhY3Rvcnk|cHJvdG90eXBlc2VyaWFsaXphdGlvbmZhY3Rvcnk|HByb3RvdHlwZXNlcmlhbGl6YXRpb25mYWN0b3J5|Bwcm90b3R5cGVzZXJpYWxpemF0aW9uZmFjdG9yeQ|d2hpbGVjbG9zdXJl|HdoaWxlY2xvc3VyZQ|B3aGlsZWNsb3N1cmU)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/248",
+            "PCI/6.5.2",
+            "paranoia-level/3"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "944017",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "944018",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RCE_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "ANOMALY_SCORE_PL4",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "944152",
+         "msg" : "Potential Remote Command Execution: Log4j / Log4shell",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni",
+               "js_decode",
+               "html_decode"
+            ]
+         },
+         "pattern" : "(?i)(?:\\$|&dollar;?)(?:\\{|&(?:lbrace|lcub);?)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-java",
+            "platform-multi",
+            "attack-rce",
+            "OWASP_CRS",
+            "capec/1000/152/137/6",
+            "PCI/6.5.2",
+            "paranoia-level/4"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_LINE"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-REQUEST-944-APPLICATION-ATTACK-JAVA",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      }
+   ],
+   "body_filter" : [],
+   "header_filter" : []
+}
+

@@ -1,9 +1,14 @@
 [submodule "libinjection"]
 	path = libinjection
-	url = https://github.com/client9/libinjection
+	url = https://github.com/fesily/libinjection.git
 [submodule "lua-aho-corasick"]
 	path = lua-aho-corasick
-	url = https://github.com/cloudflare/lua-aho-corasick
-[submodule "lua-resty-htmlentities"]
-	path = lua-resty-htmlentities
-	url = https://github.com/detailyang/lua-resty-htmlentities
+	url = https://github.com/fesily/lua-aho-corasick.git
+[submodule "test-cases/secrules-language-tests"]
+	path = test-cases/secrules-language-tests
+	url = https://github.com/SpiderLabs/secrules-language-tests.git
+	branch = master
+[submodule "lua-resty-hyperscan"]
+	path = lua-resty-hyperscan
+	url = https://github.com/fesily/lua-resty-hyperscan.git
+	branch = main

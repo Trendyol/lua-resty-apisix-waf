@@ -226,7 +226,7 @@ false
     GET /t
 --- response_body
 true
-foo
+nil
 --- error_code: 200
 --- no_error_log
 [error]
@@ -246,7 +246,7 @@ foo
     GET /t
 --- response_body
 boolean
-string
+nil
 --- error_code: 200
 --- no_error_log
 [error]

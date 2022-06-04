@@ -188,7 +188,7 @@ Persisting value: {"
 === TEST 5: Warn on failure
 --- http_config eval
 $::HttpConfig . q#
-	lua_shared_dict store 16k;
+	lua_shared_dict store 64k;
 	init_by_lua_block {
 		local lua_resty_waf = require "resty.waf"
 	}

@@ -165,8 +165,8 @@ X-Foo: Bar
 --- error_code: 403
 --- error_log
 "request_headers":{
-"host":"localhost",
-"x-foo":"Bar",
+"host":"localhost"
+"x-foo":"Bar"
 ---  no_error_log
 [error]
 

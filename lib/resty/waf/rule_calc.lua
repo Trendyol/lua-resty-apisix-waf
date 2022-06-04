@@ -29,6 +29,7 @@ local function _ignore_collection_key(ignore)
 	return table_concat(t, ',')
 end
 
+---@param var WAF.Rule.Variable
 local function _build_collection_key(var, transform)
 	local key = {}
 	key[1] = tostring(var.type)

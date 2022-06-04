@@ -1,0 +1,11 @@
+#!/usr/bin/env resty
+
+if ngx ~= nil then
+  ngx.exit = function()end
+end
+
+package.cpath = package.cpath .. ";./lib/?.so;"
+package.path = package.path .. ";./lib/?.lua;./lib/?/?.lua;./lib/?/init.lua;"
+
+-- Busted command-line runner
+require 'busted.runner'({ standalone = false })

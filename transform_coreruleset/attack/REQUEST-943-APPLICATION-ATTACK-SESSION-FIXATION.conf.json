@@ -1,0 +1,455 @@
+{
+   "access" : [
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "943011",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "943012",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "SESSION_FIXATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "943100",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Possible Session Fixation Attack: Setting Cookie Values in HTML",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "(?i:\\.cookie\\b.*?;\\W*?(?:expires|domain)\\W*?=|\\bhttp-equiv\\W+set-cookie\\b)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-fixation",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/225/21/593/61"
+         ],
+         "vars" : [
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "943110",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "^(?:jsessionid|aspsessionid|asp\\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|cfid|cftoken|cfsid|jservsession|jwsession)$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-fixation",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/225/21/593/61"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "943110",
+         "operator" : "REGEX",
+         "pattern" : "^(?:ht|f)tps?://(.*?)/",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Referer"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "SESSION_FIXATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "943110",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Possible Session Fixation Attack: SessionID Parameter Name with Off-Domain Referer",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{REQUEST_HEADERS.host}$",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "1"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "943120",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "^(?:jsessionid|aspsessionid|asp\\.net_sessionid|phpsession|phpsessid|weblogicsession|session_id|session-id|cfid|cftoken|cfsid|jservsession|jwsession)$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-fixation",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/225/21/593/61"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "SESSION_FIXATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "943120",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Possible Session Fixation Attack: SessionID Parameter Name with No Referer",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Referer"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "943013",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "943014",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "943015",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "943016",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "943017",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "943018",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-REQUEST-943-APPLICATION-ATTACK-SESSION-FIXATION",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      }
+   ],
+   "body_filter" : [],
+   "header_filter" : []
+}
+

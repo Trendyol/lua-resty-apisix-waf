@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-c -O3 -Wall -Werror -fpic -Wno-maybe-uninitialized
+CFLAGS=-c -O3 -Wall -fpic
 
 SHARED_OPTS=-shared -o $(LIB_NAME) $(OBJ_NAME)
 

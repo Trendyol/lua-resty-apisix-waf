@@ -19,7 +19,6 @@ lua-resty-waf - High-performance WAF built on the OpenResty stack
 	* [lua-resty-waf:set_option()](#lua-resty-wafset_option)
 	* [lua-resty-waf:set_var()](#lua-resty-wafset_var)
 	* [lua-resty-waf:sieve_rule()](#lua-resty-wafsieve_rule)
-	* [lua-resty-waf:sieve_ruleset()](#lua-resty-wafsieve_ruleset)
 	* [lua-resty-waf:exec()](#lua-resty-wafexec)
 	* [lua-resty-waf:write_log_events()](#lua-resty-wafwrite_log_events)
 * [Options](#options)
@@ -116,10 +115,13 @@ lua-resty-waf workload is almost exclusively CPU bound. Memory footprint in the 
 A simple Makefile is provided:
 
 ```
-$ git clone https://github.com/ilteriseroglu-ty/lua-resty-waf.git
-$ cd lua-resty-waf
-$ git submodule init && git submodule update --recursive
-$ make && sudo make install
+# make && sudo make install
+```
+
+Alternatively, install via Luarocks:
+
+```
+# luarocks install lua-resty-waf
 ```
 
 lua-resty-waf makes use of the [OPM](https://github.com/openresty/opm) package manager, available in modern OpenResty distributions. The client OPM tools requires that the `resty` command line tool is available in your system's `PATH` environmental variable.
@@ -346,32 +348,6 @@ location / {
 
 See the [rule sieves](https://github.com/p0pr0ck5/lua-resty-waf/wiki/Rule-Sieves) wiki page for details and advanced usage examples.
 
-### lua-resty-waf:sieve_ruleset()
-
-Define a collection exclusion for a given ruleset.
-
-*Example*:
-
-```lua
-location / {
-    access_by_lua_block {
-        local lua_resty_waf = require "resty.waf"
-
-        local waf = lua_resty_waf:new()
-
-        local sieves = {
-            {
-                type   = "ARGS",
-                elts   = "foo",
-                action = "ignore",
-            }
-        }
-
-        waf:sieve_ruleset("42000_xss", sieves)
-    }
-}
-```
-
 ### lua-resty-waf:exec()
 
 Run the rule engine. By default, the engine is executed according to the currently running phase. An optional table may be passed, allowing users to "mock" execution of a different phase.
@@ -491,25 +467,6 @@ location / {
     }
 }
 ```
-
-### allow_json_content_type
-
-*Default*: false
-
-Instructs lua-resty-waf to process and parse the request body when a JSON Content-Type header has been set. A request whose content type matches a JSON content type will have the `REQUEST_BODY` collection parsed as a table.
-Nested JSON content will be unpacked as a single table: `{'foo': {'bar':'bas', 'bat':'bau'}}` will be parsed as `{'foo.bar':'baz', 'foo.bat':'bau'}`.
-
-*Example*:
-
-```lua
-location / {
-    access_by_lua_block {
-        waf:set_option("allow_json_content_type", true)
-    }
-}
-```
-
-*Note: [util.lua](https://github.com/mozilla-services/lua_sandbox_extensions/blob/main/heka/modules/heka/util.lua) is required in the lua path if this setting is set to true*
 
 ### allowed_content_types
 
@@ -949,22 +906,6 @@ Instructs the module to ignore an entire ruleset. This can be useful when some r
 location / {
     access_by_lua_block {
         waf:set_option("ignore_ruleset", "41000_sqli")
-    }
-}
-```
-
-### max_json_depth
-
-*Default*: 1000
-
-Sets the maximum depth for parsing json objects to prevent denial of service.
-
-*Example*:
-
-```lua
-location / {
-    access_by_lua_block {
-        waf:set_option("max_json_depth", 500)
     }
 }
 ```

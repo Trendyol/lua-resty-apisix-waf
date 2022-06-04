@@ -1,0 +1,39 @@
+{
+    "Lua.diagnostics.globals": [
+        "ngx"
+    ],
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.workspace.checkThirdParty": false,
+    "Lua.workspace.library": [
+        "${3rd}/OpenResty/library"
+    ],
+    "diagnostics": {
+        "disable": [
+            "discard-returns",
+            "undefined-field",
+            "need-check-nil"
+        ],
+        "globals": [],
+        "neededFileStatus": {
+            "code-after-break": "Any",
+            "empty-block": "Any",
+            "redefined-local": "Any",
+            "trailing-space": "Any",
+            "unused-function": "Any",
+            "unused-label": "Any",
+            "unused-local": "Any",
+            "unused-vararg": "Any"
+        },
+        "severity": {
+            "code-after-break": "Warning",
+            "empty-block": "Warning",
+            "redefined-local": "Hint",
+            "trailing-space": "Warning",
+            "undefined-global": "Error",
+            "unused-function": "Warning",
+            "unused-label": "Warning",
+            "unused-local": "Warning",
+            "unused-vararg": "Warning"
+        }
+    }
+}

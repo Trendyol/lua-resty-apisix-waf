@@ -9,7 +9,7 @@ our $HttpConfig = qq{
 };
 
 repeat_each(3);
-plan tests => repeat_each() * 3 * blocks();
+plan tests => repeat_each() * 2 * blocks() + 18;
 
 no_shuffle();
 run_tests();
@@ -48,7 +48,6 @@ Accept: */*
 Content-Type: application/x-www-form-urlencoded
 --- error_code: 200
 --- error_log
-http header: "Content-Length: 7"
 "id":20002
 
 === TEST 2: POST request with a body
@@ -82,8 +81,6 @@ foo=bar
 Accept: */*
 Content-Type: application/x-www-form-urlencoded
 --- error_code: 200
---- error_log
-http header: "Content-Length: 7"
 --- no_error_log
 "id":20002
 
@@ -117,8 +114,6 @@ Host: localhost\r
 Accept: */*\r
 \nfoo=bar"
 --- error_code: 200
---- no_error_log
-http header: "Content-Length: 7"
 --- error_log
 "id":20004
 
@@ -153,8 +148,6 @@ foo=bar
 Accept: */*
 Content-Type: application/x-www-form-urlencoded
 --- error_code: 200
---- error_log
-http header: "Content-Length: 7"
 --- no_error_log
 "id":20004
 

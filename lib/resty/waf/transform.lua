@@ -1,62 +1,49 @@
 local _M = {}
 
 local base   = require "resty.waf.base"
-local hdec   = require "resty.htmlentities"
 local ffi    = require "ffi"
 local logger = require "resty.waf.log"
 local util   = require "resty.waf.util"
+local regex = require "resty.waf.regex"
+local libdecode = require "resty.waf.libdecode"
 
 local ffi_cpy    = ffi.copy
 local ffi_new    = ffi.new
 local ffi_str    = ffi.string
-local c_buf_type = ffi.typeof("char[?]")
 
-local string_char   = string.char
 local string_find   = string.find
-local string_gmatch = string.gmatch
 local string_gsub   = string.gsub
 local string_len    = string.len
 local string_lower  = string.lower
-local string_match  = string.match
 local string_sub    = string.sub
-
-ffi.cdef[[
-int js_decode(unsigned char *input, long int input_len);
-int css_decode(unsigned char *input, long int input_len);
-]]
+local re_sub = regex.sub
+local re_match = regex.match
+local re_gsub = regex.gsub
+local get_string_buf = require "resty.core.base".get_string_buf
 
 _M.version = base.version
 
-hdec.new() -- load the module on require
-
-local loadlib = function()
-	local so_name = 'libdecode.so'
-	local cpath = package.cpath
-
-    for k, v in string_gmatch(cpath, "[^;]+") do
-        local so_path = string_match(k, "(.*/)")
-        if so_path then
-            -- "so_path" could be nil. e.g, the dir path component is "."
-            so_path = so_path .. so_name
-
-            -- Don't get me wrong, the only way to know if a file exist is
-            -- trying to open it.
-            local f = io.open(so_path)
-            if f ~= nil then
-                io.close(f)
-                return ffi.load(so_path)
-            end
-        end
-    end
-end
-local decode_lib = loadlib()
-
 local function decode_buf_helper(value, len)
-	local buf = ffi_new(c_buf_type, len)
+	local buf = get_string_buf(len)
 	ffi_cpy(buf, value)
 	return buf
 end
 
+local is_changed = ffi_new("int[1]")
+local function utf8_to_unicode(waf, value)
+	local len = #value
+    if len == 0 then return value end
+	local buf = decode_buf_helper(value, len * 4 + 1)
+	local n = libdecode.utf8_to_unicode(value, len, is_changed, buf, len * 4 + 1)
+	return ffi_str(buf, n)
+end
+local function uri_decode(waf, value)
+	local len = #value
+	if len == 0 then return value end
+	local buf = decode_buf_helper(value, len * 3 + 1)
+	local n = libdecode.uri_decode(value, len, is_changed, buf, len * 3 + 1)
+	return ffi_str(buf, n)
+end
 _M.lookup = {
 	base64_decode = function(waf, value)
 		--_LOG_"Decoding from base64: " .. tostring(value)
@@ -76,45 +63,57 @@ _M.lookup = {
 		return t_val
 	end,
 	css_decode = function(waf, value)
-		if not value then return end
-
 		local len = #value
-		local buf = decode_buf_helper(value, len)
+        if len == 0 then return value end
+		local buf = decode_buf_helper(value, len + 1)
 
-		local n = decode_lib.css_decode(buf, len)
-
-		return (ffi_str(buf, n))
+		local n = libdecode.css_decode(buf, len)
+		return ffi_str(buf, n)
 	end,
 	cmd_line = function(waf, value)
-		local str = tostring(value)
-		str = ngx.re.gsub(str, [=[[\\'"^]]=], '',  waf._pcre_flags)
-		str = ngx.re.gsub(str, [=[\s+/]=],    '/', waf._pcre_flags)
-		str = ngx.re.gsub(str, [=[\s+[(]]=],  '(', waf._pcre_flags)
-		str = ngx.re.gsub(str, [=[[,;]]=],    ' ', waf._pcre_flags)
-		str = ngx.re.gsub(str, [=[\s+]=],     ' ', waf._pcre_flags)
-		return string_lower(str)
+		local len = #value
+		if len == 0 then return value end
+		local buf = decode_buf_helper(value, len + 1)
+
+		local n = libdecode.cmd_line(buf, len)
+		return ffi_str(buf, n)
 	end,
 	compress_whitespace = function(waf, value)
-		return ngx.re.gsub(value, [=[\s+]=], ' ', waf._pcre_flags)
+		return re_gsub(value, [=[\s+]=], ' ', waf._pcre_flags)
 	end,
 	hex_decode = function(waf, value)
-		return util.hex_decode(value)
+        local len = #value
+		if len == 0 then
+			return value
+		end
+        local buf = decode_buf_helper(value, len + 1)
+
+        local n = libdecode.hex_decode(buf, len)
+        return ffi_str(buf, n)
 	end,
 	hex_encode = function(waf, value)
 		return util.hex_encode(value)
 	end,
 	html_decode = function(waf, value)
-		local str = hdec.decode(value)
+		local len = #value
+		if len == 0 then
+			return value
+		end
+		local buf = decode_buf_helper(value, len + 1)
+
+		local i = libdecode.html_entity_decode(buf, len)
+        local str = ffi_str(buf, i)
 		--_LOG_"html decoded value is " .. str
 		return str
 	end,
 	js_decode = function(waf, value)
-		if not value then return end
-
 		local len = #value
+        if len == 0 then
+			return value
+		end
 		local buf = decode_buf_helper(value, len)
 
-		local n = decode_lib.js_decode(buf, len)
+		local n = libdecode.js_decode(buf, len)
 
 		return (ffi_str(buf, n))
 	end,
@@ -128,32 +127,61 @@ _M.lookup = {
 		return ngx.md5_bin(value)
 	end,
 	normalise_path = function(waf, value)
-		while (ngx.re.match(value, [=[[^/][^/]*/\.\./|/\./|/{2,}]=], waf._pcre_flags)) do
-			value = ngx.re.gsub(value, [=[[^/][^/]*/\.\./|/\./|/{2,}]=], '/', waf._pcre_flags)
-		end
-		return value
+		local len = #value
+		local buf = decode_buf_helper(value, len + 1)
+        local n = libdecode.normalize_path_inplace(buf, len , 0, is_changed)
+		return n == 0 and '' or ffi_str(buf, n)
 	end,
 	normalise_path_win = function(waf, value)
 		value = string_gsub(value, [[\]], [[/]])
 		return _M.lookup['normalise_path'](waf, value)
 	end,
 	remove_comments = function(waf, value)
-		return ngx.re.gsub(value, [=[\/\*(\*(?!\/)|[^\*])*\*\/]=], '', waf._pcre_flags)
+		local len = #value
+		if len == 0 then
+			return value
+		end
+		local buf = decode_buf_helper(value, len + 1)
+		local n = libdecode.remove_comments(buf, len)
+		return n == 0 and '' or ffi_str(buf, n)
 	end,
 	remove_comments_char = function(waf, value)
-		return ngx.re.gsub(value, [=[\/\*|\*\/|--|#]=], '', waf._pcre_flags)
+		return re_gsub(value, [=[\/\*|\*\/|--|#]=], '', waf._pcre_flags)
 	end,
 	remove_nulls = function(waf, value)
-		return ngx.re.gsub(value, [[\0]], '', waf._pcre_flags)
+		local len = #value
+		local buf = decode_buf_helper(value, len * 2)
+		local buf1 = buf + len
+		local index = 0
+		for i = 0, len - 1 do
+			if buf[i] ~= 0 then
+				buf1[index] = buf[i]
+				index = index + 1
+			end
+		end
+		return ffi_str(buf1, index)
 	end,
 	remove_whitespace = function(waf, value)
-		return ngx.re.gsub(value, [=[\s+]=], '', waf._pcre_flags)
+		return re_gsub(value, [=[\s+]=], '', waf._pcre_flags)
 	end,
 	replace_comments = function(waf, value)
-		return ngx.re.gsub(value, [=[\/\*(\*(?!\/)|[^\*])*\*\/]=], ' ', waf._pcre_flags)
+		local len = #value
+		if len == 0 then
+			return value
+		end
+		local buf = decode_buf_helper(value, len + 1)
+		local n = libdecode.replace_comments(buf, len)
+		return n == 0 and '' or ffi_str(buf, n)
 	end,
 	replace_nulls = function(waf, value)
-		return ngx.re.gsub(value, [[\0]], ' ', waf._pcre_flags)
+		local len = #value
+		local buf = decode_buf_helper(value, len)
+		for i = 0, len - 1 do
+			if buf[i] == 0 then
+				buf[i] = 32
+			end
+		end
+		return ffi_str(buf, len)
 	end,
 	sha1 = function(waf, value)
 		return ngx.sha1_bin(value)
@@ -167,16 +195,36 @@ _M.lookup = {
 		end
 	end,
 	trim = function(waf, value)
-		return ngx.re.gsub(value, [=[^\s*|\s+$]=], '')
+		return re_gsub(value, [=[^\s*|\s+$]=], '')
 	end,
 	trim_left = function(waf, value)
-		return ngx.re.sub(value, [=[^\s+]=], '')
+		return re_sub(value, [=[^\s+]=], '')
 	end,
 	trim_right = function(waf, value)
-		return ngx.re.sub(value, [=[\s+$]=], '')
+		return re_sub(value, [=[\s+$]=], '')
 	end,
 	uri_decode = function(waf, value)
 		return ngx.unescape_uri(value)
+	end,
+	uri_decode_uni = function(waf, value)
+		local len = #value
+		if len == 0 then
+			return value
+		end
+		local buf = decode_buf_helper(value, len + 1)
+		local n = libdecode.url_decode_uni(buf, len)
+		return ffi_str(buf, n)
+	end,
+    uri_encode = uri_decode,
+	utf8_to_unicode = utf8_to_unicode,
+	escape_seq_decode = function(waf, value)
+		local len = #value
+		if len == 0 then
+			return value
+		end
+		local buf = decode_buf_helper(value, len + 1)
+		local n = libdecode.escape_seq_decode(buf, len)
+		return ffi_str(buf, n)
 	end,
 }
 

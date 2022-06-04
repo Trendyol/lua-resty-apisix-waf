@@ -76,7 +76,7 @@ describe("translate_chain", function()
 				},
 				id       = 12345,
 				phase    = 'access',
-				vars     = { unconditional = true }
+				vars     = {{ unconditional = true }}
 			}
 		})
 		assert.spy(spy_v).was.not_called()
@@ -105,7 +105,7 @@ describe("translate_chain", function()
 				},
 				id         = 'mark',
 				op_negated = true,
-				vars       = { unconditional = true }
+				vars       = {{ unconditional = true }}
 			}
 		})
 		assert.spy(spy_v).was.not_called()

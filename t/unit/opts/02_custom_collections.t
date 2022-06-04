@@ -234,3 +234,55 @@ bar
 --- no_error_log
 [error]
 
+=== TEST 5: Define custom collections in a custom phase (existing collections not overriden)
+--- http_config eval: $::HttpConfig
+--- config
+	location /t {
+		content_by_lua_block {
+			local lua_resty_waf = require "resty.waf"
+			local waf           = lua_resty_waf:new()
+
+            local opts = {
+				phase = "access",
+				collections = {
+					foo = "bar"
+				}
+			}
+
+			waf:exec(opts)
+
+			ctx = ngx.ctx.lua_resty_waf
+
+			ngx.say(ctx.phase)
+			ngx.say(ctx.collections.URI)
+			ngx.say(ctx.collections.foo)
+
+			opts = {
+				phase = "access",
+				collections = {
+					foo = "bar"
+				},
+                init_collections = true
+			}
+
+			waf:exec(opts)
+
+			local ctx = ngx.ctx.lua_resty_waf
+
+			ngx.say(ctx.phase)
+			ngx.say(ctx.collections.URI)
+			ngx.say(ctx.collections.foo)
+		}
+	}
+--- request
+GET /t
+--- error_code: 200
+--- response_body
+access
+nil
+bar
+access
+/t
+bar
+--- no_error_log
+[error]

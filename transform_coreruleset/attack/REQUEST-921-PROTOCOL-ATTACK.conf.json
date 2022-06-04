@@ -1,0 +1,905 @@
+{
+   "access" : [
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "921011",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "921012",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921110",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Request Smuggling Attack",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "html_decode",
+               "lowercase"
+            ]
+         },
+         "pattern" : "(?:get|post|head|options|connect|put|delete|trace|track|patch|propfind|propatch|mkcol|copy|move|lock|unlock)\\s+[^\\s]+\\s+http/\\d",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/33"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921120",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Response Splitting Attack",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "[\\r\\n]\\W*?(?:content-(?:type|length)|set-cookie|location):\\s*\\w",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/34"
+         ],
+         "vars" : [
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921130",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Response Splitting Attack",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "html_decode",
+               "lowercase"
+            ]
+         },
+         "pattern" : "(?:\\bhttp/\\d|<(?:html|meta)\\b)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/34"
+         ],
+         "vars" : [
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921140",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Header Injection Attack via headers",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "html_decode"
+            ]
+         },
+         "pattern" : "[\\n\\r]",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/273"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921150",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Header Injection Attack via payload (CR/LF detected)",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "html_decode"
+            ]
+         },
+         "pattern" : "[\\n\\r]",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/33"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921160",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Header Injection Attack via payload (CR/LF and header-name detected)",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "html_decode",
+               "lowercase"
+            ]
+         },
+         "pattern" : "[\\n\\r]+(?:\\s|location|refresh|(?:set-)?cookie|(?:x-)?(?:forwarded-(?:for|host|server)|host|via|remote-ip|remote-addr|originating-IP))\\s*:",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/33"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "URI_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "URI_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921190",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Splitting (CR/LF in request filename detected)",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "[\\n\\r]",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/34"
+         ],
+         "vars" : [
+            {
+               "type" : "URI"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921200",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "LDAP Injection Attack",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "html_decode"
+            ]
+         },
+         "pattern" : "^[^:\\(\\)\\&\\|\\!\\<\\>\\~]*\\)\\s*(?:\\((?:[^,\\(\\)\\=\\&\\|\\!\\<\\>\\~]+[><~]?=|\\s*[&!|]\\s*(?:\\)|\\()?\\s*)|\\)\\s*\\(\\s*[\\&\\|\\!]\\s*|[&!|]\\s*\\([^\\(\\)\\=\\&\\|\\!\\<\\>\\~]+[><~]?=[^:\\(\\)\\&\\|\\!\\<\\>\\~]*)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-ldap",
+            "platform-multi",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/152/248/136"
+         ],
+         "vars" : [
+            {
+               "ignore" : [
+                  [
+                     "regex",
+                     "__utm"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "COOKIES"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "921013",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "921014",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921151",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Header Injection Attack via payload (CR/LF detected)",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni",
+               "html_decode"
+            ]
+         },
+         "pattern" : "[\\n\\r]",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/2",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/33"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "URI_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "921015",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "921016",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "PARAMCOUNTER_%{MATCHED_VAR_NAME}",
+                     "value" : 1
+                  }
+               }
+            ]
+         },
+         "id" : "921170",
+         "operator" : "REFIND",
+         "opts" : {
+            "nolog" : 1
+         },
+         "pattern" : ".",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/3",
+            "OWASP_CRS",
+            "capec/1000/152/137/15/460"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "921180",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/152/137/15/460",
+            "paranoia-level/3"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "regex",
+                  "PARAMCOUNTER_.*"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL3",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "921180",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "HTTP Parameter Pollution (%{TX.1})",
+         "operator" : "REGEX",
+         "pattern" : "TX:paramcounter_(.*)",
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "MATCHED_VARS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "921017",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "921018",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-REQUEST-921-PROTOCOL-ATTACK",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      }
+   ],
+   "body_filter" : [],
+   "header_filter" : []
+}
+

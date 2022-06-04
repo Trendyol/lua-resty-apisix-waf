@@ -1,2 +1,10 @@
-src/*.o
-lib/*.so
+perl-lang/
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+*.so
+*.o
+node_modules/
+dist/
+coreruleset/
+.idea/

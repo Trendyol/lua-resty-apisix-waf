@@ -79,6 +79,7 @@ GET /t
 
 			util.rule_exception(exception_table, rule)
 
+            table.sort(exception_table.meta_ids[12345])
 			ngx.say(table.concat(exception_table.meta_ids[12345], ", "))
 		}
 	}
@@ -86,7 +87,7 @@ GET /t
 GET /t
 --- error_code: 200
 --- response_body
-4, 5, 6, 4, 5, 6, 1, 2, 3
+1, 2, 3, 4, 4, 5, 5, 6, 6
 --- no_error_log
 [error]
 

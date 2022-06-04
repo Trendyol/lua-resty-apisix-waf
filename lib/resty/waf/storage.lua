@@ -11,19 +11,24 @@ local string_upper = string.upper
 
 local _valid_backends = { dict = true, memcached = true, redis = true }
 
+---@param waf WAF
 function _M.initialize(waf, storage, col)
 	local backend = waf._storage_backend
 	if not util.table_has_key(backend, _valid_backends) then
 		logger.fatal_fail(backend .. " is not a valid persistent storage backend")
 	end
 
+	---@module 'resty.waf.storage.dict'
 	local backend_m = require("resty.waf.storage." .. backend)
 
 	--_LOG_"Initializing storage type " .. backend
 
 	backend_m.initialize(waf, storage, col)
 end
-
+---@param waf WAF
+---@param ctx WAF.Ctx
+---@param element WAF.Rule.Data
+---@param value any
 function _M.set_var(waf, ctx, element, value)
 	local col = ctx.col_lookup[string_upper(element.col)]
 	if not col then

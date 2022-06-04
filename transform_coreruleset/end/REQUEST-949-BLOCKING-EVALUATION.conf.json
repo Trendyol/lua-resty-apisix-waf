@@ -1,0 +1,864 @@
+{
+   "access" : [
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL1}"
+                  }
+               }
+            ]
+         },
+         "id" : "949052",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL1}"
+                  }
+               }
+            ]
+         },
+         "id" : "949152",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL2}"
+                  }
+               }
+            ]
+         },
+         "id" : "949053",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL2}"
+                  }
+               }
+            ]
+         },
+         "id" : "949153",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL3}"
+                  }
+               }
+            ]
+         },
+         "id" : "949054",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL3}"
+                  }
+               }
+            ]
+         },
+         "id" : "949154",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL4}"
+                  }
+               }
+            ]
+         },
+         "id" : "949055",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL4}"
+                  }
+               }
+            ]
+         },
+         "id" : "949155",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : 0
+                  }
+               }
+            ]
+         },
+         "id" : "949059",
+         "opts" : {
+            "nolog" : 1
+         },
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : 0
+                  }
+               }
+            ]
+         },
+         "id" : "949159",
+         "opts" : {
+            "nolog" : 1
+         },
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL1}"
+                  }
+               }
+            ]
+         },
+         "id" : "949060",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL1}"
+                  }
+               }
+            ]
+         },
+         "id" : "949160",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL2}"
+                  }
+               }
+            ]
+         },
+         "id" : "949061",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL2}"
+                  }
+               }
+            ]
+         },
+         "id" : "949161",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL3}"
+                  }
+               }
+            ]
+         },
+         "id" : "949062",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL3}"
+                  }
+               }
+            ]
+         },
+         "id" : "949162",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL4}"
+                  }
+               }
+            ]
+         },
+         "id" : "949063",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : "%{TX.INBOUND_ANOMALY_SCORE_PL4}"
+                  }
+               }
+            ]
+         },
+         "id" : "949163",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "BEGIN-REQUEST-BLOCKING-EVAL",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "949111",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.INBOUND_ANOMALY_SCORE_THRESHOLD}",
+         "tag" : [
+            "anomaly-evaluation"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_INBOUND_ANOMALY_SCORE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "949111",
+         "msg" : "Inbound Anomaly Score Exceeded in phase 1 (Total Score: %{TX.BLOCKING_INBOUND_ANOMALY_SCORE})",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "EARLY_BLOCKING"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "949110",
+         "msg" : "Inbound Anomaly Score Exceeded (Total Score: %{TX.BLOCKING_INBOUND_ANOMALY_SCORE})",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.INBOUND_ANOMALY_SCORE_THRESHOLD}",
+         "tag" : [
+            "anomaly-evaluation"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "BLOCKING_INBOUND_ANOMALY_SCORE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "949011",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "949012",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "949013",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "949014",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "949015",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "949016",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "949017",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "949018",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-REQUEST-949-BLOCKING-EVALUATION",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      }
+   ],
+   "body_filter" : [],
+   "header_filter" : []
+}
+

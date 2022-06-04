@@ -52,6 +52,7 @@ local valid_vars = {
 	FILES_TMP_CONTENT       = { type = 'FILES_TMP_CONTENT', parse = { "values", true } },
 	MATCHED_VAR             = { type = 'MATCHED_VAR' },
 	MATCHED_VARS            = { type = 'MATCHED_VARS' },
+	MATCHED_VARS_NAMES	    = { type = 'MATCHED_VARS', parse = { "keys", true } },
 	MATCHED_VAR_NAME        = { type = 'MATCHED_VAR_NAME' },
 	MATCHED_VAR_NAMES       = { type = 'MATCHED_VAR_NAMES' },
 	QUERY_STRING            = { type = 'QUERY_STRING' },
@@ -87,6 +88,8 @@ local valid_vars = {
 	TX                      = { type = 'TX', storage = true },
 	IP                      = { type = 'IP', storage = true },
 	GLOBAL                  = { type = 'GLOBAL', storage = true },
+	REQBODY_PROCESSOR       = { type = 'REQBODY_PROCESSOR' },
+	UNIQUE_ID				= { type = 'UNIQUE_ID'},
 }
 _M.valid_vars = valid_vars
 
@@ -115,6 +118,9 @@ local valid_operators = {
 	strmatch         = 'STR_MATCH',
 	verifyCC         = 'VERIFY_CC',
 	within           = 'STR_EXISTS',
+	validateByteRange = 'VALIDATE_BYTE_RANGE',
+	validateUrlEncoding = 'VALIDATE_URL_ENCODING',
+	validateUtf8Encoding = 'VALIDATE_UTF8_ENCODING',
 };
 
 local valid_transforms = {
@@ -123,6 +129,7 @@ local valid_transforms = {
 	base64encode       = 'base64_encode',
 	cssdecode          = 'css_decode',
 	cmdline            = 'cmd_line',
+	cmd_line           = 'cmd_line',
 	compresswhitespace = 'compress_whitespace',
 	hexdecode          = 'hex_decode',
 	hexencode          = 'hex_encode',
@@ -147,8 +154,12 @@ local valid_transforms = {
 	trimleft           = 'trim_left',
 	trimright          = 'trim_right',
 	urldecode          = 'uri_decode',
-	urldecodeuni       = 'uri_decode',
+	urldecodeuni       = 'uri_decode_uni',
+    urlencode          = 'uri_encode',
+	escapeseqdecode    = 'escape_seq_decode',
+	utf8tounicode    ='utf8_to_unicode'
 };
+_M.valid_transforms = valid_transforms
 
 local action_lookup = {
 	allow = 'ACCEPT',
@@ -291,6 +302,14 @@ local ctl_lookup = {
 		if not translation.exceptions then translation.exceptions = {} end
 		table.insert(translation.exceptions, value)
 		meta_exception(translation)
+	end,
+	requestBodyProcessor = function(value, translation)
+		local action = {
+			action = 'request_body_processor',
+			data   = value,
+		}
+
+		table.insert(translation.actions.nondisrupt, action)
 	end,
 }
 
@@ -518,8 +537,7 @@ function _M.parse_vars(raw_vars)
 
 	return parsed_vars
 end
-
-pats.operator = rex.new([[\s*(?:(\!)?(?:\@([a-zA-Z]+)\s*)?)?(.*)$]])
+pats.operator = rex.new([[\s*(?:(\!)?(?:\@([a-zA-Z0-9]+)\s*)?)?(.*)$]])
 function _M.parse_operator(raw_operator)
 	local op_regex = pats.operator
 
@@ -788,6 +806,11 @@ function _M.translate_operator(rule, translation, path)
 	end
 
 	if translated_operator == 'CIDR_MATCH' then
+		local pattern = split(rule.operator.pattern, ",")
+		translation.pattern = pattern
+	end
+
+	if translated_operator == 'VALIDATE_BYTE_RANGE' then
 		local pattern = split(rule.operator.pattern, ",")
 		translation.pattern = pattern
 	end

@@ -76,14 +76,16 @@ nil
     location = /t {
         content_by_lua_block {
 			local op = require "resty.waf.operators"
-			local match, value = op.ac_lookup({ "bang", "bash", "quz" }, { "foo", "bar", "baz", "qux" }, { id = 1 })
+			local match, value = op.lookup.PM(nil, { "bang", "bash", "quz" }, { "foo", "bar", "baz", "qux" }, { id = 1 })
 			ngx.say(match)
+			ngx.say(value)
 		}
 	}
 --- request
 GET /t
 --- error_code: 200
 --- response_body
+nil
 nil
 --- no_error_log
 [error]
@@ -94,7 +96,7 @@ nil
     location = /t {
         content_by_lua_block {
 			local op = require "resty.waf.operators"
-			local match, value = op.ac_lookup("foo", { "foo", "bar", "baz", "qux" }, { id = 1 })
+			local match, value = op.lookup.PM(nil, "foo", { "foo", "bar", "baz", "qux" }, { id = 1 })
 			ngx.say(match)
 			ngx.say(value)
 		}
@@ -114,7 +116,7 @@ foo
     location = /t {
         content_by_lua_block {
 			local op = require "resty.waf.operators"
-			local match, value = op.ac_lookup("foo", { "foo", "bar", "baz", "qux" }, { id = 1 })
+			local match, value = op.lookup.PM(nil, "foo", { "foo", "bar", "baz", "qux" }, { id = 1 })
 			ngx.say(type(match))
 			ngx.say(type(value))
 		}

@@ -79,8 +79,8 @@ GET /t?arg=foo2&otherarg=bar
 User-Agent: testy mctesterson
 Accept: */*
 --- error_code: 200
---- error_log
-"alerts":[{"match":"bar","id":"12346"}]
+--- error_log eval
+qr/"alerts":\[\{(?:"\w+":"\w+",*)+\}\]/
 --- no_error_log
 [error]
 "match":"foo2","id":"12346"

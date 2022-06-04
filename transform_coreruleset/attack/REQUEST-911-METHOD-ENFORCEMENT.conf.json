@@ -1,0 +1,245 @@
+{
+   "access" : [
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "911011",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "911012",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "911100",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Method is not allowed by policy",
+         "op_negated" : 1,
+         "operator" : "STR_EXISTS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.ALLOWED_METHODS}",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-generic",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272/220/274",
+            "PCI/12.1"
+         ],
+         "vars" : [
+            {
+               "type" : "METHOD"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "911013",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "911014",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "911015",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "911016",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "911017",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "911018",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-REQUEST-911-METHOD-ENFORCEMENT",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      }
+   ],
+   "body_filter" : [],
+   "header_filter" : []
+}
+

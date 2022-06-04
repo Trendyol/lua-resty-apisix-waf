@@ -6,15 +6,17 @@ local upload	= require "resty.upload"
 local base   = require "resty.waf.base"
 local logger = require "resty.waf.log"
 local util   = require "resty.waf.util"
-
-local decode   = require "cjson.safe".decode
+local regex = require "resty.waf.regex"
 
 local table_concat = table.concat
 local table_insert = table.insert
-
+local re_find = regex.find
+local re_match = regex.match
 
 _M.version = base.version
 
+---@param waf WAF
+---@param collections WAF.Collections
 function _M.parse_request_body(waf, request_headers, collections, phase)
 	local content_type_header = request_headers["content-type"]
 
@@ -34,18 +36,23 @@ function _M.parse_request_body(waf, request_headers, collections, phase)
 	-- but its necessary for us to properly handle the request
 	-- and its likely a sign of nogoodnickery anyway
 	if not content_type_header then
-		--_LOG_"Request has no content type, ignoring the body"
-		return nil, nil, nil
+        if not collections.REQBODY_PROCESSOR then
+		    --_LOG_"Request has no content type, ignoring the body"
+    		return nil, nil, nil
+        else
+            content_type_header = ''
+        end
 	end
 
 	--_LOG_"Examining content type " .. content_type_header
+
 	-- handle the request body based on the Content-Type header
 	-- multipart/form-data requests will be streamed in via lua-resty-upload,
 	-- which provides some basic sanity checking as far as form and protocol goes
 	-- (but its much less strict that ModSecurity's strict checking)
-	if ngx.re.find(content_type_header, [=[^multipart/form-data; boundary=]=], waf._pcre_flags) then
+	if collections.REQBODY_PROCESSOR == 'MULTIPART' or re_find(content_type_header, [=[^multipart/form-data; boundary=]=], waf._pcre_flags) then
 		if not waf._process_multipart_body then
-			return nil, nil, nil
+			return
 		end
 
 		local form, err = upload:new()
@@ -101,6 +108,7 @@ function _M.parse_request_body(waf, request_headers, collections, phase)
 
 				local chunk_size = #chunk
 
+				body = body .. chunk
 				body_size = body_size + #chunk
 
 				--_LOG_"c:" .. chunk_size .. ", b:" .. body_size
@@ -108,6 +116,7 @@ function _M.parse_request_body(waf, request_headers, collections, phase)
 				ngx.req.append_body(chunk)
 			elseif typ == "part_end" then
 				table.insert(FILES_SIZES, body_size)
+
 				files_size = files_size + body_size
 				body_size = 0
 
@@ -133,64 +142,41 @@ function _M.parse_request_body(waf, request_headers, collections, phase)
 		collections.FILES_SIZES = FILES_SIZES
 		collections.FILES_TMP_CONTENT = FILES_TMP_CONTENT
 		collections.FILES_COMBINED_SIZE = files_size
-
+		collections.REQBODY_PROCESSOR =  "MULTIPART"
 		return nil, nil, nil
-	else
-		-- remove charset from the content-type (e.g. application/json;charset=utf-8 -> application/json)
-		content_type_header = string.match(content_type_header, "[^;]+")
-		
-		if waf._allow_json_content_type and util.table_has_value(content_type_header, waf.json_content_types) then
-			-- read the request body as JSON content
-			-- return the nginx content as an array with unpacked nested elements
-			ngx.req.read_body()
-			if ngx.req.get_body_file() == nil then
-				local body_data = decode(ngx.req.get_body_data())
-					if type(body_data) == "table" then
-						return util.unpack_json(waf, decode(ngx.req.get_body_data()),''), nil, nil
-					else
-						-- consider the body data as a string that is inserted into a table if it's not a well-formated JSON string
-						return { body_data }, nil, nil
-					end
-			else
-				--_LOG_"Request body size larger than client_body_buffer_size, ignoring request body"
-				return nil, nil, nil
-			end
-		elseif ngx.re.find(content_type_header, [=[^application/x-www-form-urlencoded]=], waf._pcre_flags) then
-			-- use the underlying ngx API to read the request body
-			-- ignore processing the request body if the content length is larger than client_body_buffer_size
-			-- to avoid wasting resources on ruleset matching of very large data sets
-			ngx.req.read_body()
-	
-			if ngx.req.get_body_file() == nil then
-				return ngx.req.get_post_args(), nil, nil
-			else
-				--_LOG_"Request body size larger than client_body_buffer_size, ignoring request body"
-				return nil, nil, nil
-			end
-		elseif util.table_has_key(content_type_header, waf._allowed_content_types) then
-			-- if the content type has been whitelisted by the user, set REQUEST_BODY as a string
-			ngx.req.read_body()
-	
-			if ngx.req.get_body_file() == nil then
-				return ngx.req.get_body_data(), nil, nil
-			else
-				--_LOG_"Request body size larger than client_body_buffer_size, ignoring request body"
-				return nil, nil, nil
-			end
+	elseif collections.REQBODY_PROCESSOR == 'URLENCODED' or re_find(content_type_header, [=[^application/x-www-form-urlencoded]=], waf._pcre_flags) then
+		-- use the underlying ngx API to read the request body
+		-- ignore processing the request body if the content length is larger than client_body_buffer_size
+		-- to avoid wasting resources on ruleset matching of very large data sets
+		ngx.req.read_body()
+
+		collections.REQBODY_PROCESSOR =  "URLENCODED"
+		if ngx.req.get_body_file() == nil then
+			return ngx.req.get_post_args(), nil, nil
 		else
-			if waf._allow_unknown_content_types then
-				--_LOG_"Allowing request with content type " .. tostring(content_type_header)
-				return nil, nil, nil
-			else
-				--_LOG_tostring(content_type_header) .. " not a valid content type!"
-				logger.warn(waf, tostring(content_type_header) .. " not a valid content type!")
-				if waf._mode == "ACTIVE" then
-					if phase == "access" then
-						return nil, 403, { message = "Access Denied" }
-					end
-					ngx.exit(ngx.HTTP_FORBIDDEN)
-				end
+			--_LOG_"Request body size larger than client_body_buffer_size, ignoring request body"
+			return nil, nil, nil
+		end
+	elseif util.table_has_key(content_type_header, waf._allowed_content_types) then
+		-- if the content type has been whitelisted by the user, set REQUEST_BODY as a string
+		ngx.req.read_body()
+
+		if ngx.req.get_body_file() == nil then
+			return ngx.req.get_body_data(), nil, nil
+		else
+			--_LOG_"Request body size larger than client_body_buffer_size, ignoring request body"
+			return nil, nil, nil
+		end
+	else
+		if waf._allow_unknown_content_types then
+			--_LOG_"Allowing request with content type " .. tostring(content_type_header)
+			return nil, nil, nil
+		else
+			--_LOG_tostring(content_type_header) .. " not a valid content type!"
+			if phase == "access" then
+				return nil, 403, { message = "Access Denied" }
 			end
+			ngx.exit(ngx.HTTP_FORBIDDEN)
 		end
 	end
 end
@@ -214,7 +200,7 @@ function _M.request_uri_raw(request_line, method)
 end
 
 function _M.basename(waf, uri)
-	local m = ngx.re.match(uri, [=[(/[^/]*+)+]=], waf._pcre_flags)
+	local m = re_match(uri, [=[(/[^/]*+)+]=], waf._pcre_flags)
 	return m[1]
 end
 

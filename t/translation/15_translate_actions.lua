@@ -726,4 +726,17 @@ describe("translate_actions", function()
 		assert.has.errors(function() t(rule, translation) end)
 	end)
 
+	it("translates ctl:requestBodyProcessor",function()
+		local rule = {
+			actions = {{
+				action = 'ctl',
+				value = 'requestBodyProcessor=URLENCODED'
+			}}
+		}
+		assert.has.no_errors(function() t(rule, translation) end)
+		assert.is.same(translation.actions.nondisrupt[1], {
+			action = 'request_body_processor',
+			data   = 'URLENCODED',
+		})
+	end)
 end)

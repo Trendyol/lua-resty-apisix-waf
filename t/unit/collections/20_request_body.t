@@ -9,7 +9,7 @@ our $HttpConfig = qq{
 };
 
 repeat_each(3);
-plan tests => repeat_each() * 4 * blocks();
+plan tests => repeat_each() * 4 * blocks() - 3 ;
 
 no_shuffle();
 run_tests();
@@ -98,6 +98,38 @@ foo=bar
 nil
 --- error_log
 Request has no content type, ignoring the body
+--- no_error_log
+[error]
+
+=== TEST 3a: REQUEST_BODY collections variable (POST request, no content type, but set REQBODY_PROCESSOR)
+--- http_config eval: $::HttpConfig
+--- config
+	location /t {
+		access_by_lua_block {
+			local lua_resty_waf = require "resty.waf"
+			local waf           = lua_resty_waf:new()
+
+			waf:set_option("debug", true)
+            local opts = {
+                collections = { REQBODY_PROCESSOR =  "URLENCODED" },
+                init_collections = true,
+            }
+			waf:exec(opts)
+		}
+
+		content_by_lua_block {
+			local collections = ngx.ctx.lua_resty_waf.collections
+
+			ngx.say(collections.REQUEST_BODY ~= nil)
+		}
+	}
+--- request
+POST /t
+foo=bar
+--- error_code: 200
+--- response_body
+true
+--- error_log
 --- no_error_log
 [error]
 

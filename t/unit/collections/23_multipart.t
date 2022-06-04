@@ -199,3 +199,39 @@ value
 --- no_error_log
 [error]
 
+
+=== TEST 6: FILES collections variable (no Content-Type)
+--- http_config eval: $::HttpConfig
+--- config
+	location /t {
+		access_by_lua_block {
+			local request = require "resty.waf.request"
+
+			local collections = { REQBODY_PROCESSOR = "MULTIPART" }
+
+			request.parse_request_body(
+				{
+					_pcre_flags = 'joi',
+					_process_multipart_body = true,
+				},
+				{
+
+				},
+				collections
+			)
+
+			ngx.say(collections.FILES[1])
+			ngx.say(collections.FILES[2])
+		}
+	}
+--- more_headers
+Content-Type: multipart/form-data; boundary=---------------------------820127721219505131303151179
+--- request eval
+q#POST /t# . $::mock_upload
+--- error_code: 200
+--- response_body
+a.txt
+nil
+--- no_error_log
+[error]
+

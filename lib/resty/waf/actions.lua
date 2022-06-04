@@ -60,6 +60,7 @@ _M.nondisruptive_lookup = {
 
 		storage.expire_var(waf, ctx, data, time)
 	end,
+	---@param ctx WAF.Ctx
 	initcol = function(waf, data, ctx, collections)
 		local col    = data.col
 		local value  = data.value
@@ -97,7 +98,6 @@ _M.nondisruptive_lookup = {
 
 		-- this lookup table holds
 		local meta_rules = waf._meta_exception.meta_ids[ctx.id]
-
 		if not meta_rules then return end
 
 		for i, id in ipairs(meta_rules) do
@@ -109,6 +109,9 @@ _M.nondisruptive_lookup = {
 		--_LOG_"Overriding mode from " .. waf._mode .. " to " .. mode
 
 		waf._mode = mode
+	end,
+	request_body_processor = function(waf, mode, ctx, collections)
+		collections.REQUEST_BODY = mode
 	end,
 }
 

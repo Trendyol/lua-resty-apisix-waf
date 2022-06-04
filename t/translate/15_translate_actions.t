@@ -1370,4 +1370,33 @@ is_deeply(
 	'translate multiple meta removal actions'
 );
 
+
+$translation = {};
+translate_actions(
+	{
+		actions => [
+			{
+				action => 'ctl',
+				value  => 'requestBodyProcessor=URLENCODED',
+			}
+		]
+	},
+	$translation,
+	undef
+);
+is_deeply(
+	$translation,
+	{
+		actions => {
+			nondisrupt => [
+				{
+					action => 'request_body_processor',
+					data   => 'URLENCODED',
+				}
+			]
+		}
+	},
+	'translate multiple meta removal actions'
+);
+
 done_testing;

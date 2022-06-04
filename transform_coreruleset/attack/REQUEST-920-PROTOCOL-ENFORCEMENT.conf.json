@@ -1,0 +1,3356 @@
+{
+   "access" : [
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "920011",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "920012",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920100",
+         "logdata" : "%{REQUEST_LINE}",
+         "msg" : "Invalid HTTP Request Line",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "(?i)^(?:(?:[a-z]{3,10}\\s+(?:\\w{3,7}?://[\\w\\-\\./]*(?::\\d+)?)?\\/[^?#]*(?:\\?[^#\\s]*)?(?:#[\\S]*)?|connect (?:(?:\\d{1,3}\\.){3}\\d{1,3}\\.?(?::\\d+)?|[\\w\\-\\./]+:\\d+)|options \\*)\\s+[\\w\\./]+|get \\/[^?#]*(?:\\?[^#\\s]*)?(?:#[\\S]*)?)$",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_LINE"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920120",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Attempted multipart/form-data bypass",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "(?i)^(?:&(?:(?:[aeiouclnrszg]acut|[aeiou]grav|[anoi]tild)e|(?:[cgklnrst]cedi|[aeiouy]um)l|[aeioucghjswy]circ|[cdelnrstz]caron|a(?:pos|mp)|[au]ring|oslash|nbsp);|[^'\";=])*$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "type" : "FILES"
+            },
+            {
+               "type" : "FILES_NAMES"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920160",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Content-Length HTTP header is not numeric",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "^\\d+$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Length"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920170",
+         "operator" : "REFIND",
+         "pattern" : "^(?:GET|HEAD)$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "type" : "METHOD"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920170",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "GET or HEAD Request with Body Content",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "^0?$",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Length"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920171",
+         "operator" : "REFIND",
+         "pattern" : "^(?:GET|HEAD)$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "type" : "METHOD"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920171",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "GET or HEAD Request with Transfer-Encoding",
+         "op_negated" : 1,
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Transfer-Encoding"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920180",
+         "op_negated" : 1,
+         "operator" : "STR_EXISTS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "HTTP/2 HTTP/2.0",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "type" : "PROTOCOL"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920180",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "POST",
+         "vars" : [
+            {
+               "type" : "METHOD"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920180",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Content-Length"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920180",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "POST without Content-Length or Transfer-Encoding headers",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Transfer-Encoding"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920181",
+         "op_negated" : 1,
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Transfer-Encoding"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920181",
+         "msg" : "Content-Length and Transfer-Encoding headers present",
+         "op_negated" : 1,
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Content-Length"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920190",
+         "operator" : "REGEX",
+         "pattern" : "(\\d+)-(\\d+)",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Range"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "Request-Range"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920190",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Range: Invalid Last Byte Value",
+         "operator" : "LESS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.1}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "2"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920210",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Multiple/Conflicting Connection Header Data Found",
+         "operator" : "REFIND",
+         "pattern" : "\\b(?:keep-alive|close),\\s?(?:keep-alive|close)\\b",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Connection"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920220",
+         "operator" : "REFIND",
+         "pattern" : "\\x25",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/255/153/267/72"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_URI"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920220",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "URL Encoding Abuse Attack Attempt",
+         "operator" : "VALIDATE_URL_ENCODING",
+         "pattern" : "",
+         "vars" : [
+            {
+               "type" : "REQUEST_URI"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920240",
+         "operator" : "REFIND",
+         "pattern" : "^(?i)application/x-www-form-urlencoded",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/255/153/267/72"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Type"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920240",
+         "operator" : "REFIND",
+         "pattern" : "\\x25",
+         "vars" : [
+            {
+               "type" : "REQUEST_BODY"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920240",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "URL Encoding Abuse Attack Attempt",
+         "operator" : "VALIDATE_URL_ENCODING",
+         "pattern" : "",
+         "vars" : [
+            {
+               "type" : "REQUEST_BODY"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920250",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/255/153/267"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "CRS_VALIDATE_UTF8_ENCODING"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920250",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "UTF8 Encoding Abuse Attack Attempt",
+         "operator" : "VALIDATE_UTF8_ENCODING",
+         "pattern" : "",
+         "vars" : [
+            {
+               "type" : "URI"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920260",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Unicode Full/Half Width Abuse Attack Attempt",
+         "operator" : "REFIND",
+         "pattern" : "\\%u[fF]{2}[0-9a-fA-F]{2}",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-iis",
+            "platform-windows",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/255/153/267/72"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_URI"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920270",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Invalid character in request (null character)",
+         "operator" : "VALIDATE_BYTE_RANGE",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : [
+            "1-255"
+         ],
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_URI"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920280",
+         "msg" : "Request Missing a Host Header",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "severity" : "WARNING",
+         "skip_after" : "END-HOST-CHECK",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "PCI/6.5.10"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Host"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920290",
+         "msg" : "Empty Host Header",
+         "operator" : "REFIND",
+         "pattern" : "^$",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Host"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-HOST-CHECK",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920310",
+         "operator" : "REFIND",
+         "pattern" : "^$",
+         "severity" : "NOTICE",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Accept"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920310",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "^OPTIONS$",
+         "vars" : [
+            {
+               "type" : "METHOD"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.NOTICE_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920310",
+         "msg" : "Request Has an Empty Accept Header",
+         "op_negated" : 1,
+         "operator" : "PM",
+         "pattern" : [
+            "AppleWebKit",
+            "Android",
+            "Business",
+            "Enterprise",
+            "Entreprise"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "User-Agent"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920311",
+         "operator" : "REFIND",
+         "pattern" : "^$",
+         "severity" : "NOTICE",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Accept"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920311",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "^OPTIONS$",
+         "vars" : [
+            {
+               "type" : "METHOD"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.NOTICE_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920311",
+         "msg" : "Request Has an Empty Accept Header",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "User-Agent"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.NOTICE_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920330",
+         "msg" : "Empty User Agent Header",
+         "operator" : "REFIND",
+         "pattern" : "^$",
+         "severity" : "NOTICE",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "User-Agent"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920340",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "^0$",
+         "severity" : "NOTICE",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Length"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.NOTICE_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920340",
+         "msg" : "Request Containing Content, but Missing Content-Type header",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Content-Type"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920350",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Host header is a numeric IP address",
+         "operator" : "REFIND",
+         "pattern" : "(?:^([\\d.]+|\\[[\\da-f:]+\\]|[\\da-f:]+)(:[\\d]+)?$)",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "PCI/6.5.10"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Host"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920380",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "MAX_NUM_ARGS"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920380",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Too many arguments in request",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.MAX_NUM_ARGS}",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920360",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "ARG_NAME_LENGTH"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920360",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Argument name too long",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1,
+            "transform" : [
+               "length"
+            ]
+         },
+         "pattern" : "%{TX.ARG_NAME_LENGTH}",
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920370",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "ARG_LENGTH"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920370",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Argument value too long",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1,
+            "transform" : [
+               "length"
+            ]
+         },
+         "pattern" : "%{TX.ARG_LENGTH}",
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920390",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "TOTAL_ARG_LENGTH"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920390",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Total arguments size exceeded",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.TOTAL_ARG_LENGTH}",
+         "vars" : [
+            {
+               "type" : "ARGS_COMBINED_SIZE"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920400",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "MAX_FILE_SIZE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920400",
+         "operator" : "REFIND",
+         "pattern" : "^(?i)multipart/form-data",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Type"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920400",
+         "msg" : "Uploaded file size too large",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.MAX_FILE_SIZE}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Length"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920410",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "COMBINED_FILE_SIZES"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920410",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Total uploaded files size too large",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.COMBINED_FILE_SIZES}",
+         "vars" : [
+            {
+               "type" : "FILES_COMBINED_SIZE"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920470",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Illegal Content-Type header",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "^[\\w/.+*-]+(?:\\s?;\\s?(?:action|boundary|charset|component|start(?:-info)?|type|version)\\s?=\\s?['\"\\w.()+,/:=?<>@#*-]+)*$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/255/153",
+            "PCI/12.1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Type"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "CONTENT_TYPE",
+                     "value" : "|%{TX.0}|"
+                  }
+               }
+            ]
+         },
+         "id" : "920420",
+         "operator" : "REGEX",
+         "pattern" : "^[^;\\s]+",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/255/153",
+            "PCI/12.1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Type"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920420",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Request content type is not allowed by policy",
+         "op_negated" : 1,
+         "operator" : "STR_EXISTS",
+         "opts" : {
+            "parsepattern" : 1,
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "%{TX.ALLOWED_REQUEST_CONTENT_TYPE}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "CONTENT_TYPE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "CONTENT_TYPE_CHARSET",
+                     "value" : "|%{TX.1}|"
+                  }
+               }
+            ]
+         },
+         "id" : "920480",
+         "operator" : "REGEX",
+         "pattern" : "charset\\s*=\\s*[\"']?([^;\"'\\s]+)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/255/153",
+            "PCI/12.1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Type"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920480",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Request content type charset is not allowed by policy",
+         "op_negated" : 1,
+         "operator" : "STR_EXISTS",
+         "opts" : {
+            "parsepattern" : 1,
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "%{TX.ALLOWED_REQUEST_CONTENT_TYPE_CHARSET}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "CONTENT_TYPE_CHARSET"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920430",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "HTTP protocol version is not allowed by policy",
+         "op_negated" : 1,
+         "operator" : "STR_EXISTS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.ALLOWED_HTTP_VERSIONS}",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "PCI/6.5.10"
+         ],
+         "vars" : [
+            {
+               "type" : "PROTOCOL"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "EXTENSION",
+                     "value" : ".%{TX.1}/"
+                  }
+               }
+            ]
+         },
+         "id" : "920440",
+         "operator" : "REGEX",
+         "pattern" : "\\.([^.]+)$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "PCI/6.5.10"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_BASENAME"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920440",
+         "logdata" : "%{TX.0}",
+         "msg" : "URL file extension is restricted by policy",
+         "operator" : "STR_EXISTS",
+         "opts" : {
+            "parsepattern" : 1,
+            "transform" : [
+               "uri_decode_uni",
+               "lowercase"
+            ]
+         },
+         "pattern" : "%{TX.RESTRICTED_EXTENSIONS}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "EXTENSION"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920500",
+         "logdata" : "%{TX.0}",
+         "msg" : "Attempt to access a backup or working file",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "\\.[^.~]+~(?:/.*|)$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "PCI/6.5.10"
+         ],
+         "vars" : [
+            {
+               "type" : "URI"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "HEADER_NAME_%{TX.0}",
+                     "value" : "/%{TX.0}/"
+                  }
+               }
+            ]
+         },
+         "id" : "920450",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "^.*$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "PCI/12.1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920450",
+         "logdata" : "Restricted header detected: %{MATCHED_VAR}",
+         "msg" : "HTTP header is restricted by policy (%{MATCHED_VAR})",
+         "operator" : "STR_EXISTS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.RESTRICTED_HEADERS}",
+         "vars" : [
+            {
+               "parse" : [
+                  "regex",
+                  "^HEADER_NAME_"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920520",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Accept-Encoding header exceeded sensible length",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1,
+            "transform" : [
+               "lowercase",
+               "length"
+            ]
+         },
+         "pattern" : "50",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/255/153",
+            "PCI/12.1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Accept-Encoding"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "920013",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "920014",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920200",
+         "operator" : "REFIND",
+         "pattern" : "^bytes=(?:(?:\\d+)?-(?:\\d+)?\\s*,?\\s*){6}",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Range"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "Request-Range"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920200",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Range: Too many fields (6 or more)",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : ".pdf$",
+         "vars" : [
+            {
+               "type" : "REQUEST_BASENAME"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920201",
+         "operator" : "REFIND",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : ".pdf$",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_BASENAME"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920201",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Range: Too many fields for pdf request (63 or more)",
+         "operator" : "REFIND",
+         "pattern" : "^bytes=(?:(?:\\d+)?-(?:\\d+)?\\s*,?\\s*){63}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Range"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "Request-Range"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920230",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Multiple URL Encoding Detected",
+         "operator" : "REFIND",
+         "pattern" : "%[0-9a-fA-F]{2}",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/255/153/267/120",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920271",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Invalid character in request (non printable characters)",
+         "operator" : "VALIDATE_BYTE_RANGE",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : [
+            "9",
+            "10",
+            "13",
+            "32-126",
+            "128-255"
+         ],
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_URI"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.NOTICE_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920320",
+         "msg" : "Missing User Agent Header",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "severity" : "NOTICE",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "PCI/6.5.10",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "User-Agent"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920121",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Attempted multipart/form-data bypass",
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "['\";=]",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "type" : "FILES_NAMES"
+            },
+            {
+               "type" : "FILES"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920341",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "^0$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/2",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Content-Length"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920341",
+         "msg" : "Request Containing Content Requires Content-Type header",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Content-Type"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "920015",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "920016",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL3",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920272",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Invalid character in request (outside of printable chars below ascii 127)",
+         "operator" : "VALIDATE_BYTE_RANGE",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : [
+            "32-36",
+            "38-126"
+         ],
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/3"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_URI"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920300",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "severity" : "NOTICE",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "PCI/6.5.10",
+            "paranoia-level/3"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Accept"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920300",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "^(?:OPTIONS|CONNECT)$",
+         "vars" : [
+            {
+               "type" : "METHOD"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL3",
+                     "value" : "%{TX.NOTICE_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920300",
+         "msg" : "Request Missing an Accept Header",
+         "op_negated" : 1,
+         "operator" : "PM",
+         "pattern" : [
+            "AppleWebKit",
+            "Android"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "User-Agent"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920490",
+         "operator" : "GREATER_EQ",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "language-aspnet",
+            "platform-windows",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/3"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "x-up-devcap-post-charset"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL3",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920490",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Request header x-up-devcap-post-charset detected in combination with prefix \\'UP\\' to User-Agent",
+         "operator" : "REFIND",
+         "pattern" : "^(?i)up",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "User-Agent"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920510",
+         "operator" : "GREATER",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "header-allowlist",
+            "paranoia-level/3",
+            "OWASP_CRS",
+            "capec/1000/210/272"
+         ],
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "Cache-Control"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL3",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920510",
+         "logdata" : "Invalid Cache-Control value in request found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Invalid Cache-Control request header",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "^(?:(?:max-age=[0-9]+|min-fresh=[0-9]+|no-cache|no-store|no-transform|only-if-cached|max-stale(?:=[0-9]+)?)(?:\\s*\\,\\s*|$)){1,7}$",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Cache-Control"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL3",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920521",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Illegal Accept-Encoding header",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "lowercase"
+            ]
+         },
+         "pattern" : "(?:x-(?:compress|gzip)|(?:pack200-)?gzip|aes128gcm|compress|identity|deflate|zstd|exi|^$|br|\\*)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/3",
+            "OWASP_CRS",
+            "capec/1000/255/153",
+            "PCI/12.1"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Accept-Encoding"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "920017",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "920018",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "920202",
+         "operator" : "REFIND",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : ".pdf$",
+         "severity" : "WARNING",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/4"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_BASENAME"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL4",
+                     "value" : "%{TX.WARNING_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920202",
+         "logdata" : "%{MATCHED_VAR}",
+         "msg" : "Range: Too many fields for pdf request (6 or more)",
+         "operator" : "REFIND",
+         "pattern" : "^bytes=(?:(?:\\d+)?-(?:\\d+)?\\s*,?\\s*){6}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Range"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "Request-Range"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL4",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920273",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Invalid character in request (outside of very strict set)",
+         "operator" : "VALIDATE_BYTE_RANGE",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : [
+            "38",
+            "44-46",
+            "48-58",
+            "61",
+            "65-90",
+            "95",
+            "97-122"
+         ],
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/4"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL4",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920274",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Invalid character in request headers (outside of very strict set)",
+         "operator" : "VALIDATE_BYTE_RANGE",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : [
+            "32",
+            "34",
+            "38",
+            "42-59",
+            "61",
+            "65-90",
+            "95",
+            "97-122"
+         ],
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/4"
+         ],
+         "vars" : [
+            {
+               "ignore" : [
+                  [
+                     "ignore",
+                     "User-Agent"
+                  ],
+                  [
+                     "ignore",
+                     "Referer"
+                  ],
+                  [
+                     "ignore",
+                     "Cookie"
+                  ],
+                  [
+                     "ignore",
+                     "Sec-Fetch-User"
+                  ],
+                  [
+                     "ignore",
+                     "Sec-CH-UA"
+                  ],
+                  [
+                     "ignore",
+                     "Sec-CH-UA-Mobile"
+                  ]
+               ],
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL4",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920275",
+         "logdata" : "%{MATCHED_VAR_NAME}=%{MATCHED_VAR}",
+         "msg" : "Invalid character in request headers (outside of very strict set)",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "^(?:\\?[01])?$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "OWASP_CRS",
+            "capec/1000/210/272",
+            "paranoia-level/4"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "Sec-Fetch-User"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "specific",
+                  "Sec-CH-UA-Mobile"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL4",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "920460",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Abnormal character escapes in request",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "html_decode",
+               "lowercase"
+            ]
+         },
+         "pattern" : "(?:^|[^\\x5c])\\x5c[cdeghijklmpqwxyz123456789]",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-protocol",
+            "paranoia-level/4",
+            "OWASP_CRS",
+            "capec/1000/153/267"
+         ],
+         "vars" : [
+            {
+               "type" : "REQUEST_URI"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_HEADERS"
+            },
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            },
+            {
+               "parse" : [
+                  "keys",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-REQUEST-920-PROTOCOL-ENFORCEMENT",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      }
+   ],
+   "body_filter" : [],
+   "header_filter" : []
+}
+

@@ -1,4 +1,4 @@
-use Test::Nginx::Socket::Lua;
+use Test::Nginx::Socket::Lua ;
 use Cwd qw(cwd);
 
 my $pwd = cwd();
@@ -12,7 +12,7 @@ use lib 't';
 use TestDNS;
 
 repeat_each(3);
-plan tests => repeat_each() * 4 * blocks();
+plan tests => repeat_each() * 3 * blocks();
 
 no_shuffle();
 run_tests();
@@ -52,7 +52,6 @@ true
 127.0.0.4
 --- no_error_log
 [error]
-[warn]
 
 === TEST 2: No match (dummy record)
 --- http_config eval: $::HttpConfig
@@ -86,7 +85,6 @@ false
 nil
 --- no_error_log
 [error]
-[warn]
 
 === TEST 3: No match (bail on no nameservers)
 --- http_config eval: $::HttpConfig
@@ -113,7 +111,6 @@ false
 nil
 --- no_error_log
 [error]
-[warn]
 
 === TEST 4: No match (invalid IP)
 --- http_config eval: $::HttpConfig
@@ -140,5 +137,4 @@ false
 nil
 --- no_error_log
 [error]
-[warn]
 

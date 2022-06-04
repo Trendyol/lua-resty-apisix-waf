@@ -154,7 +154,7 @@ false
     GET /t
 --- response_body
 true
-1
+nil
 --- error_code: 200
 --- no_error_log
 [error]
@@ -174,7 +174,7 @@ true
     GET /t
 --- response_body
 boolean
-number
+nil
 --- error_code: 200
 --- no_error_log
 [error]

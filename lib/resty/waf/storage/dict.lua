@@ -3,12 +3,12 @@ local _M = {}
 local base    = require "resty.waf.base"
 local cjson   = require "cjson"
 local logger  = require "resty.waf.log"
-local storage = require "resty.waf.storage"
 
 _M.version = base.version
 
-_M.col_prefix = storage.col_prefix
+_M.col_prefix = require "resty.waf.storage".col_prefix
 
+---@param waf WAF
 function _M.initialize(waf, storage, col)
 	if not waf._storage_zone then
 		logger.fatal_fail("No storage_zone configured for memory-based persistent storage")
@@ -16,8 +16,8 @@ function _M.initialize(waf, storage, col)
 
 	local col_name = _M.col_prefix .. col
 
-	local altered, serialized, shm
-	shm        = ngx.shared[waf._storage_zone]
+	local altered, serialized
+	local shm        = ngx.shared[waf._storage_zone]
 	serialized = shm:get(col_name)
 	altered    = false
 
@@ -63,7 +63,7 @@ function _M.persist(waf, col, data)
 	local ok, err = shm:set(col_name, serialized)
 
 	if not ok then
-		logger.warn(waf, "Error adding key to persistent storage, increase the size of the lua_shared_dict " .. waf._storage_zone)
+		logger.warn(waf, "Error adding key to persistent storage, increase the size of the lua_shared_dict " .. err)
 	end
 end
 

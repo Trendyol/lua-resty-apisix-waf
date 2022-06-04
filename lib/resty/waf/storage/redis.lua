@@ -5,6 +5,9 @@ local cjson   = require "cjson"
 local logger  = require "resty.waf.log"
 local redis_m = require "resty.redis"
 local storage = require "resty.waf.storage"
+local regex = require "resty.waf.regex"
+
+local re_find = regex.find
 
 _M.version = base.version
 
@@ -77,7 +80,7 @@ function _M.initialize(waf, storage, col)
 			end
 
 			-- bah redis and integers :|
-			if(data[key] and ngx.re.find(data[key], [=[^\d+$]=], 'oj')) then
+			if(data[key] and re_find(data[key], [=[^\d+$]=], 'oj')) then
 				data[key] = tonumber(data[key])
 			end
 		end

@@ -1,0 +1,439 @@
+{
+   "access" : [
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "931011",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "931012",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "1",
+         "skip_after" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RFI_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "931100",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Possible Remote File Inclusion (RFI) Attack: URL Parameter using IP Address",
+         "operator" : "REGEX",
+         "pattern" : "^(?i:file|ftps?|https?)://(?:\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-rfi",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/152/175/253"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RFI_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "931110",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Possible Remote File Inclusion (RFI) Attack: Common RFI Vulnerable Parameter Name used w/URL Payload",
+         "operator" : "REGEX",
+         "opts" : {
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "(?i)(?:\\binclude\\s*\\([^)]*|mosConfig_absolute_path|_CONF\\[path\\]|_SERVER\\[DOCUMENT_ROOT\\]|GALLERY_BASEDIR|path\\[docroot\\]|appserv_root|config\\[root_dir\\])=(?:file|ftps?|https?)://",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-rfi",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/152/175/253"
+         ],
+         "vars" : [
+            {
+               "type" : "QUERY_STRING"
+            },
+            {
+               "type" : "REQUEST_BODY"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RFI_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "931120",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Possible Remote File Inclusion (RFI) Attack: URL Payload Used w/Trailing Question Mark Character (?)",
+         "operator" : "REGEX",
+         "pattern" : "^(?i:file|ftps?|https?).*?\\?+$",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-rfi",
+            "paranoia-level/1",
+            "OWASP_CRS",
+            "capec/1000/152/175/253"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "931013",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "931014",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "2",
+         "skip_after" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "RFI_PARAMETER_%{MATCHED_VAR_NAME}",
+                     "value" : ".%{TX.1}"
+                  }
+               }
+            ]
+         },
+         "id" : "931130",
+         "operator" : "REGEX",
+         "pattern" : "^(?i:file|ftps?|https?)://(?:[^@]+@)?([^/]+)",
+         "severity" : "CRITICAL",
+         "tag" : [
+            "application-multi",
+            "language-multi",
+            "platform-multi",
+            "attack-rfi",
+            "OWASP_CRS",
+            "capec/1000/152/175/253",
+            "paranoia-level/2"
+         ],
+         "vars" : [
+            {
+               "parse" : [
+                  "values",
+                  "1"
+               ],
+               "type" : "REQUEST_ARGS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "RFI_SCORE",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "inc" : 1,
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : "%{TX.CRITICAL_ANOMALY_SCORE}"
+                  }
+               }
+            ]
+         },
+         "id" : "931130",
+         "logdata" : "Matched Data: %{TX.0} found within %{MATCHED_VAR_NAME}: %{MATCHED_VAR}",
+         "msg" : "Possible Remote File Inclusion (RFI) Attack: Off-Domain Reference/Link",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : ".%{REQUEST_HEADERS.host}$",
+         "vars" : [
+            {
+               "parse" : [
+                  "regex",
+                  "RFI_PARAMETER_.*"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "931015",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "931016",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "3",
+         "skip_after" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "931017",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "931018",
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "4",
+         "skip_after" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-REQUEST-931-APPLICATION-ATTACK-RFI",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      }
+   ],
+   "body_filter" : [],
+   "header_filter" : []
+}
+

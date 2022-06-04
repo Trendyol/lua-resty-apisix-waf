@@ -57,7 +57,7 @@ Beginning ruleset 99000_scoring,
 Beginning ruleset test.rules,
 --- no_error_log
 [error]
-Doing offset calculation
+qr/Doing offset calculation of (^initialize)/
 
 === TEST 2: Error on loading a DNE SecRules file
 --- http_config eval
@@ -99,7 +99,7 @@ Beginning ruleset 99000_scoring,
 --- no_error_log
 [error]
 Beginning ruleset test.dne,
-Doing offset calculation
+qr/Doing offset calculation of (^initialize)/
 
 === TEST 3: Error on trying to use an unloaded ruleset
 --- http_config eval
@@ -174,7 +174,7 @@ Beginning ruleset test_errs.rules,
 --- no_error_log
 [error]
 Match of rule 12345
-Doing offset calculation
+qr/Doing offset calculation of (^initialize)/
 
 === TEST 5: Load a valid SecRules with some errors (table)
 --- http_config eval
@@ -222,4 +222,4 @@ Beginning ruleset test_errs.rules,
 [error]
 Cannot translate action foo
 Match of rule 12345
-Doing offset calculation
+qr/Doing offset calculation of (^initialize)/

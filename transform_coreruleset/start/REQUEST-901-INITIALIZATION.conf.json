@@ -1,0 +1,1176 @@
+{
+   "access" : [
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "status",
+                  "data" : 500
+               }
+            ]
+         },
+         "id" : "901001",
+         "msg" : "ModSecurity Core Rule Set is deployed without configuration! Please copy the crs-setup.conf.example template to crs-setup.conf, and include the crs-setup.conf file in your webserver configuration before including the CRS rules. See the INSTALL file in the CRS directory for detailed instructions",
+         "operator" : "EQUALS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "severity" : "CRITICAL",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "CRS_SETUP_VERSION"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "INBOUND_ANOMALY_SCORE_THRESHOLD",
+                     "value" : 5
+                  }
+               }
+            ]
+         },
+         "id" : "901100",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "INBOUND_ANOMALY_SCORE_THRESHOLD"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "OUTBOUND_ANOMALY_SCORE_THRESHOLD",
+                     "value" : 4
+                  }
+               }
+            ]
+         },
+         "id" : "901110",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "OUTBOUND_ANOMALY_SCORE_THRESHOLD"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "REPORTING_LEVEL",
+                     "value" : 4
+                  }
+               }
+            ]
+         },
+         "id" : "901111",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "REPORTING_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "EARLY_BLOCKING",
+                     "value" : 0
+                  }
+               }
+            ]
+         },
+         "id" : "901115",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "EARLY_BLOCKING"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "BLOCKING_PARANOIA_LEVEL",
+                     "value" : 1
+                  }
+               }
+            ]
+         },
+         "id" : "901120",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "BLOCKING_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "DETECTION_PARANOIA_LEVEL",
+                     "value" : "%{TX.BLOCKING_PARANOIA_LEVEL}"
+                  }
+               }
+            ]
+         },
+         "id" : "901125",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "SAMPLING_PERCENTAGE",
+                     "value" : 100
+                  }
+               }
+            ]
+         },
+         "id" : "901130",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "SAMPLING_PERCENTAGE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "CRITICAL_ANOMALY_SCORE",
+                     "value" : 5
+                  }
+               }
+            ]
+         },
+         "id" : "901140",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "CRITICAL_ANOMALY_SCORE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "ERROR_ANOMALY_SCORE",
+                     "value" : 4
+                  }
+               }
+            ]
+         },
+         "id" : "901141",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "ERROR_ANOMALY_SCORE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "WARNING_ANOMALY_SCORE",
+                     "value" : 3
+                  }
+               }
+            ]
+         },
+         "id" : "901142",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "WARNING_ANOMALY_SCORE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "NOTICE_ANOMALY_SCORE",
+                     "value" : 2
+                  }
+               }
+            ]
+         },
+         "id" : "901143",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "NOTICE_ANOMALY_SCORE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "DO_REPUT_BLOCK",
+                     "value" : 0
+                  }
+               }
+            ]
+         },
+         "id" : "901150",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "DO_REPUT_BLOCK"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "REPUT_BLOCK_DURATION",
+                     "value" : 300
+                  }
+               }
+            ]
+         },
+         "id" : "901152",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "REPUT_BLOCK_DURATION"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "ALLOWED_METHODS",
+                     "value" : "GET HEAD POST OPTIONS"
+                  }
+               }
+            ]
+         },
+         "id" : "901160",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "ALLOWED_METHODS"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "ALLOWED_REQUEST_CONTENT_TYPE",
+                     "value" : "|application/x-www-form-urlencoded| |multipart/form-data| |multipart/related| |text/xml| |application/xml| |application/soap+xml| |application/x-amf| |application/json| |application/cloudevents+json| |application/cloudevents-batch+json| |application/octet-stream| |application/csp-report| |application/xss-auditor-report| |text/plain|"
+                  }
+               }
+            ]
+         },
+         "id" : "901162",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "ALLOWED_REQUEST_CONTENT_TYPE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "ALLOWED_REQUEST_CONTENT_TYPE_CHARSET",
+                     "value" : "|utf-8| |iso-8859-1| |iso-8859-15| |windows-1252|"
+                  }
+               }
+            ]
+         },
+         "id" : "901168",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "ALLOWED_REQUEST_CONTENT_TYPE_CHARSET"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "ALLOWED_HTTP_VERSIONS",
+                     "value" : "HTTP/1.0 HTTP/1.1 HTTP/2 HTTP/2.0"
+                  }
+               }
+            ]
+         },
+         "id" : "901163",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "ALLOWED_HTTP_VERSIONS"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "RESTRICTED_EXTENSIONS",
+                     "value" : ".asa/ .asax/ .ascx/ .backup/ .bak/ .bat/ .cdx/ .cer/ .cfg/ .cmd/ .com/ .config/ .conf/ .cs/ .csproj/ .csr/ .dat/ .db/ .dbf/ .dll/ .dos/ .htr/ .htw/ .ida/ .idc/ .idq/ .inc/ .ini/ .key/ .licx/ .lnk/ .log/ .mdb/ .old/ .pass/ .pdb/ .pol/ .printer/ .pwd/ .rdb/ .resources/ .resx/ .sql/ .swp/ .sys/ .vb/ .vbs/ .vbproj/ .vsdisco/ .webinfo/ .xsd/ .xsx/"
+                  }
+               }
+            ]
+         },
+         "id" : "901164",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "RESTRICTED_EXTENSIONS"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "RESTRICTED_HEADERS",
+                     "value" : "/proxy/ /lock-token/ /content-range/ /if/ /user-agentt/"
+                  }
+               }
+            ]
+         },
+         "id" : "901165",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "RESTRICTED_HEADERS"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "ENFORCE_BODYPROC_URLENCODED",
+                     "value" : 0
+                  }
+               }
+            ]
+         },
+         "id" : "901167",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "0",
+         "vars" : [
+            {
+               "length" : 1,
+               "parse" : [
+                  "specific",
+                  "ENFORCE_BODYPROC_URLENCODED"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "BLOCKING_INBOUND_ANOMALY_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "DETECTION_INBOUND_ANOMALY_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "INBOUND_ANOMALY_SCORE_PL1",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "INBOUND_ANOMALY_SCORE_PL2",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "INBOUND_ANOMALY_SCORE_PL3",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "INBOUND_ANOMALY_SCORE_PL4",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "SQL_INJECTION_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "XSS_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "RFI_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "LFI_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "RCE_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "PHP_INJECTION_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "HTTP_VIOLATION_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "SESSION_FIXATION_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "BLOCKING_OUTBOUND_ANOMALY_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "DETECTION_OUTBOUND_ANOMALY_SCORE",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "OUTBOUND_ANOMALY_SCORE_PL1",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "OUTBOUND_ANOMALY_SCORE_PL2",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "OUTBOUND_ANOMALY_SCORE_PL3",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "OUTBOUND_ANOMALY_SCORE_PL4",
+                     "value" : 0
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "SQL_ERROR_MATCH",
+                     "value" : 0
+                  }
+               }
+            ]
+         },
+         "id" : "901200",
+         "opts" : {
+            "nolog" : 1
+         },
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "UA_HASH",
+                     "value" : "%{MATCHED_VAR}"
+                  }
+               }
+            ]
+         },
+         "id" : "901318",
+         "operator" : "REFIND",
+         "opts" : {
+            "nolog" : 1,
+            "transform" : [
+               "sha1",
+               "hex_encode"
+            ]
+         },
+         "pattern" : "^.*$",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "User-Agent"
+               ],
+               "type" : "REQUEST_HEADERS"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "initcol",
+                  "data" : {
+                     "col" : "GLOBAL",
+                     "value" : "global"
+                  }
+               },
+               {
+                  "action" : "initcol",
+                  "data" : {
+                     "col" : "IP",
+                     "value" : "%{REMOTE_ADDR}_%{TX.UA_HASH}"
+                  }
+               },
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "REAL_IP",
+                     "value" : "%{REMOTE_ADDR}"
+                  }
+               }
+            ]
+         },
+         "id" : "901321",
+         "opts" : {
+            "nolog" : 1
+         },
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "901340",
+         "msg" : "Enabling body inspection",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "opts" : {
+            "nolog" : 1
+         },
+         "pattern" : "(?:URLENCODED|MULTIPART|XML|JSON)",
+         "tag" : [
+            "paranoia-level/1"
+         ],
+         "vars" : [
+            {
+               "type" : "REQBODY_PROCESSOR"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "CHAIN"
+         },
+         "id" : "901350",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1,
+            "transform" : [
+               "uri_decode_uni"
+            ]
+         },
+         "pattern" : "1",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "ENFORCE_BODYPROC_URLENCODED"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "request_body_processor",
+                  "data" : "URLENCODED"
+               }
+            ]
+         },
+         "id" : "901350",
+         "msg" : "Enabling forced body inspection for ASCII content",
+         "op_negated" : 1,
+         "operator" : "REFIND",
+         "pattern" : "(?:URLENCODED|MULTIPART|XML|JSON)",
+         "vars" : [
+            {
+               "type" : "REQBODY_PROCESSOR"
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE"
+         },
+         "id" : "901400",
+         "operator" : "EQUALS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "100",
+         "skip_after" : "END-SAMPLING",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "SAMPLING_PERCENTAGE"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "setvar",
+                  "data" : {
+                     "col" : "TX",
+                     "key" : "SAMPLING_RND100",
+                     "value" : "%{TX.1}%{TX.2}"
+                  }
+               }
+            ]
+         },
+         "id" : "901410",
+         "operator" : "REGEX",
+         "opts" : {
+            "nolog" : 1,
+            "transform" : [
+               "sha1",
+               "hex_encode"
+            ]
+         },
+         "pattern" : "^[a-f]*([0-9])[a-f]*([0-9])",
+         "vars" : [
+            {
+               "type" : "UNIQUE_ID"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "IGNORE",
+            "nondisrupt" : [
+               {
+                  "action" : "rule_remove_by_meta",
+                  "data" : 1
+               }
+            ]
+         },
+         "exceptions" : [
+            "OWASP_CRS"
+         ],
+         "id" : "901450",
+         "msg" : "Sampling: Disable the rule engine based on sampling_percentage %{TX.SAMPLING_PERCENTAGE} and random number %{TX.SAMPLING_RND100}",
+         "op_negated" : 1,
+         "operator" : "LESS",
+         "opts" : {
+            "nolog" : 1,
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.SAMPLING_PERCENTAGE}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "SAMPLING_RND100"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY"
+         },
+         "id" : "END-SAMPLING",
+         "op_negated" : 1,
+         "vars" : [
+            {
+               "unconditional" : 1
+            }
+         ]
+      },
+      {
+         "actions" : {
+            "disrupt" : "DENY",
+            "nondisrupt" : [
+               {
+                  "action" : "status",
+                  "data" : 500
+               }
+            ]
+         },
+         "id" : "901500",
+         "msg" : "Detection paranoia level configured is lower than the paranoia level itself. This is illegal. Blocking request. Aborting",
+         "operator" : "LESS",
+         "opts" : {
+            "parsepattern" : 1
+         },
+         "pattern" : "%{TX.BLOCKING_PARANOIA_LEVEL}",
+         "vars" : [
+            {
+               "parse" : [
+                  "specific",
+                  "DETECTION_PARANOIA_LEVEL"
+               ],
+               "storage" : 1,
+               "type" : "TX"
+            }
+         ],
+         "ver" : "OWASP_CRS/4.0.0-rc1"
+      }
+   ],
+   "body_filter" : [],
+   "header_filter" : []
+}
+

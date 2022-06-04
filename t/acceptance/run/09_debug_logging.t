@@ -43,7 +43,7 @@ GET /t?foo=bar
 	$::log_prefix,
 	qr{waf\.lua:\d+: exec\(\): \[[0-9a-z]{20}\] Beginning run of phase access},
 	qr{waf\.lua:\d+: exec\(\): \[[0-9a-z]{20}\] Beginning ruleset \d+_\w+},
-	qr{waf\.lua:\d+: exec\(\): \[[0-9a-z]{20}\] Processing rule \d+},
+	qr{waf\.lua:\d+: _exe_global_ruleset\(\): \[[0-9a-z]{20}\] Processing rule \d+},
 	qr{waf\.lua:\d+: _build_collection\(\): \[[0-9a-z]{20}\] Checking for collection_key [A-Z]+\|[a-z]+,},
 	qr{util\.lua:\d+: _parse_collection\(\): \[[0-9a-z]{20}\] Parse collection},
 	qr{waf\.lua:\d+: _process_rule\(\): \[[0-9a-z]{20}\] Returning offset \d+},

@@ -16,8 +16,12 @@ local function split(source, delimiter)
 end
 
 -- warn logger
-function _M.warn(waf, msg)
-	ngx.log(ngx.WARN, '[', waf.transaction_id, '] ', msg)
+function _M.warn(waf, ...)
+	ngx.log(ngx.WARN, '[', waf.transaction_id, '] ', ...)
+end
+
+function _M.WARN(...)
+	ngx.log(ngx.WARN, ...)
 end
 
 -- deprecation logger

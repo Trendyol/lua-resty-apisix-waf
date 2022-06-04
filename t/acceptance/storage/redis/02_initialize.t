@@ -261,10 +261,15 @@ $::HttpConfig . q#
 		}
 
 		content_by_lua_block {
+		    local t = {}
 			for k in pairs(ngx.ctx) do
 				if (k ~= "__altered") then
-					ngx.say(tostring(k) .. ": " .. tostring(ngx.ctx[k]) .. " (" .. type(ngx.ctx[k]) .. ")")
+				    table.insert(t, k)
 				end
+			end
+			table.sort(t)
+			for _,k in ipairs(t) do
+				ngx.say(tostring(k) .. ": " .. tostring(ngx.ctx[k]) .. " (" .. type(ngx.ctx[k]) .. ")")
 			end
 		}
 	}
