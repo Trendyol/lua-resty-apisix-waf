@@ -980,7 +980,7 @@ sub translate_macro {
 	my ($string) = @_;
 
 	# grab each macro and replace it with its lookup equivalent
-	for my $macro ($string =~ m/%{([^}]+)}/g) {
+	for my $macro ($string =~ m/%\{([^}]+)\}/g) {
 		my ($key, $specific) = split /\./, $macro;
 		my $replacement;
 
