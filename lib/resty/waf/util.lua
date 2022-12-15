@@ -185,6 +185,24 @@ function _M.load_ruleset_file(name)
 	return nil, "could not find " .. name
 end
 
+
+-- find a rule file in a given path with a .json suffix, read it, and return a JSON string
+function _M.load_ruleset_file_in_path(name, path)
+
+	local full_name = path .. "/" .. name .. ".json"
+
+	local f = io.open(full_name)
+	if f ~= nil then
+		local data = f:read("*all")
+
+		f:close()
+
+		return _M.parse_ruleset(data)
+	end
+
+        return nil, "could not find " .. name .. "in" .. path 
+end
+
 -- encode a given string as hex
 function _M.hex_encode(str)
 	return (str:gsub('.', function (c)

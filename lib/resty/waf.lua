@@ -40,7 +40,8 @@ local _global_rulesets = {
 	"41000_sqli",
 	"42000_xss",
 	"90000_custom",
-	"99000_scoring"
+	"99000_scoring",
+	"all"
 }
 _M.global_rulesets = _global_rulesets
 
@@ -150,12 +151,12 @@ end
 local function _transaction_id_header(self, ctx)
 	-- upstream request header
 	if self._req_tid_header then
-		ngx.req.set_header("X-Lua-Resty-WAF-ID", self.transaction_id)
+		ngx.req.set_header("TY-WAF-ID", self.transaction_id)
 	end
 
 	-- downstream response header
 	if self._res_tid_header then
-		ngx.header["X-Lua-Resty-WAF-ID"] = self.transaction_id
+		ngx.header["TY-WAF-ID"] = self.transaction_id
 	end
 
 	ctx.t_header_set = true
@@ -445,7 +446,7 @@ local function _merge_rulesets(self)
 end
 
 -- main entry point
-function _M.exec(self, opts)
+function _M.exec(self, opts, path)
 	if self._mode == "INACTIVE" then
 		--_LOG_"Operational mode is INACTIVE, not running"
 		return
@@ -540,8 +541,11 @@ function _M.exec(self, opts)
 
 		if not rs then
 			local err
-			rs, err = util.load_ruleset_file(ruleset)
-
+			if path then
+				rs, err = util.load_ruleset_file_in_path(ruleset, path)
+			else
+				rs, err = util.load_ruleset_file(ruleset)
+			end
 			if err then
 				logger.fatal_fail(err)
 			else
@@ -692,14 +696,18 @@ function _M.set_option(self, option, value, data)
 end
 
 -- init_by_lua handler precomputations
-function _M.init()
+function _M.init(path)
 	-- do offset jump calculations for default rulesets
 	-- this is also lazily handled in exec() for rulesets
 	-- that dont appear here
 	for _, ruleset in ipairs(_global_rulesets) do
 		local rs, err, calc
 
-		rs, err = util.load_ruleset_file(ruleset)
+		if path then
+			rs, err = util.load_ruleset_file_in_path(ruleset,path)
+		else
+			rs, err = util.load_ruleset_file(ruleset)
+		end
 
 		if err then
 			ngx.log(ngx.ERR, err)
