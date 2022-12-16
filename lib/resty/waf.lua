@@ -151,12 +151,12 @@ end
 local function _transaction_id_header(self, ctx)
 	-- upstream request header
 	if self._req_tid_header then
-		ngx.req.set_header("TY-WAF-ID", self.transaction_id)
+		ngx.req.set_header(self._waf_header_key, self.transaction_id)
 	end
 
 	-- downstream response header
 	if self._res_tid_header then
-		ngx.header["TY-WAF-ID"] = self.transaction_id
+		ngx.header[self._waf_header_key] = self.transaction_id
 	end
 
 	ctx.t_header_set = true
@@ -657,6 +657,7 @@ function _M.new()
 		transaction_id               = random.random_bytes(10),
 		var_count                    = 0,
 		var                          = {},
+		_waf_header_key              = 'X-Lua-Resty-WAF-ID',
 	}
 
 	if _ruleset_def_cnt == 0 then
