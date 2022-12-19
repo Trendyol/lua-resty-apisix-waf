@@ -200,7 +200,7 @@ function _M.load_ruleset_file_in_path(name, path)
 		return _M.parse_ruleset(data)
 	end
 
-        return nil, "could not find " .. name .. "in" .. path 
+        return nil, "could not find " .. name .. " in " .. path 
 end
 
 -- encode a given string as hex
