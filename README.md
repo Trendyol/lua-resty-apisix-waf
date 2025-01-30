@@ -1,3 +1,5 @@
+
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Trendyol/lua-resty-apisix-waf/badge)](https://scorecard.dev/viewer/?uri=github.com/Trendyol/lua-resty-apisix-waf)
 ## Name
 
 lua-resty-waf - High-performance WAF built on the OpenResty stack
